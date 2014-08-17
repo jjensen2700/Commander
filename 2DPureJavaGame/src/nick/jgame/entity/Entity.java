@@ -5,24 +5,23 @@ import nick.jgame.world.*;
 
 public abstract class Entity implements Renderable {
 
-	private byte		height;
+	private byte			height;
 
-	protected World		home;
+	protected final World	home;
 
-	protected Sprite	img;
+	protected Sprite		img;
 
-	private boolean		inited;
+	protected boolean		isStatic;
 
-	protected boolean	isStatic;
+	private byte			width;
 
-	private byte		width;
+	private short			xLoc;
 
-	private short		xLoc;
+	private short			yLoc;
 
-	private short		yLoc;
+	public Entity(final World w, final short xSpawn, final short ySpawn, final byte wide, final byte high) {
 
-	public Entity(final short xSpawn, final short ySpawn, final byte wide, final byte high) {
-
+		home = w;
 		this.height = high;
 		this.width = wide;
 		setLoc(xSpawn, ySpawn);
@@ -46,12 +45,6 @@ public abstract class Entity implements Renderable {
 	public final int getYLoc( ) {
 
 		return yLoc;
-	}
-
-	public void init(final World w) {
-
-		home = w;
-		inited = true;
 	}
 
 	protected final boolean isColliding( ) {
@@ -94,11 +87,6 @@ public abstract class Entity implements Renderable {
 			return true;
 		}
 		return false;
-	}
-
-	public boolean isInited( ) {
-
-		return inited;
 	}
 
 	public final void move(final int x, final int y) {

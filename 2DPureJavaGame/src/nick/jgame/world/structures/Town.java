@@ -19,12 +19,12 @@ public final class Town extends WorldStruct {
 
 	private final Types[ ]	types			= new Types[ ] { Types.NONE, Types.NONE };
 
-	public Town(final World w, final short tileX, final short tileY, final String name) {
+	public Town(final World home, final short tileX, final short tileY, final String name) {
 
-		super(tileX, tileY, name);
+		super(home, tileX, tileY, name);
 
-		if (w != null) {
-			calcTypes(w);
+		if (home != null) {
+			calcTypes(home);
 		}
 	}
 
@@ -125,17 +125,17 @@ public final class Town extends WorldStruct {
 	}
 
 	@Override
-	public void update(final World w) {
+	public void update( ) {
 
 		if (hasNoTypes( )) {
-			calcTypes(w);
+			calcTypes(home);
 		}
 		if (population >= 100) {
-			population -= w.getRand( ).nextInt(5);
+			population -= home.getRand( ).nextInt(5);
 		}
 
 		if ((population <= 0) && (getHealth( ) <= 0)) {
-			w.removeStruct(this);
+			home.removeStruct(this);
 		}
 	}
 }

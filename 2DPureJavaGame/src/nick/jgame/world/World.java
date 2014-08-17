@@ -314,7 +314,7 @@ public final class World extends GuiWithThread {
 
 		if (!getTile(e.getTileXLoc( ), e.getTileYLoc( )).getTileMat( ).isSolid( ) && !isOutOfBounds(e.getTileXLoc( ), e.getTileYLoc( ))) {
 			entities.add(e);
-			e.init(this);
+
 		}
 	}
 
@@ -334,7 +334,7 @@ public final class World extends GuiWithThread {
 		}
 
 		for (WorldStruct t : structs) {
-			t.update(this);
+			t.update( );
 		}
 		// KeyBindings
 		KeyBinding.updateAll( );

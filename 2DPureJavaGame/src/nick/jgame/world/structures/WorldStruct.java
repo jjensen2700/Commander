@@ -6,20 +6,28 @@ import nick.jgame.world.World;
 
 public abstract class WorldStruct implements Renderable {
 
+	protected final World	home;
+
 	protected String		name;
 
 	protected EntityOwner	owner;
 
 	protected final short	xLoc, yLoc;
 
-	protected WorldStruct(final short x, final short y, final String name) {
+	protected WorldStruct(final World w, final short x, final short y, final String name) {
 
 		this.xLoc = x;
 		this.yLoc = y;
 		this.name = name;
+		this.home = w;
 	}
 
 	public abstract boolean canBePlacedHere(World w, short tileX, short tileY);
+
+	public final World getHome( ) {
+
+		return home;
+	}
 
 	public final String getName( ) {
 
@@ -51,5 +59,5 @@ public abstract class WorldStruct implements Renderable {
 		this.owner = owner;
 	}
 
-	public abstract void update(World w);
+	public abstract void update( );
 }

@@ -68,9 +68,9 @@ public final class Mine extends WorldStruct {
 
 	private MineType		type;
 
-	public Mine(final short tileX, final short tileY, final String name) {
+	public Mine(final World home, final short tileX, final short tileY, final String name) {
 
-		super(tileX, tileY, name);
+		super(home, tileX, tileY, name);
 	}
 
 	@Override
@@ -90,11 +90,11 @@ public final class Mine extends WorldStruct {
 	}
 
 	@Override
-	public void update(final World w) {
+	public void update( ) {
 
 		owner.addMoney(getProducedMoney( ));
 		if (ticksLived > (MineQuantity.getTickLife(quantity) * 1000)) {
-			w.removeStruct(this);
+			home.removeStruct(this);
 		}
 		ticksLived++;
 	}
