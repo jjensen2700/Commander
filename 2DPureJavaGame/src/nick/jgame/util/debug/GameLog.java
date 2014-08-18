@@ -4,7 +4,7 @@ import nick.jgame.opts.Options;
 
 public final class GameLog {
 
-	private enum Levels {
+	private static enum Levels {
 		DEBUG("debug"), INFO("info"), WARN("warning");
 
 		private final String	type;

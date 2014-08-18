@@ -9,7 +9,7 @@ import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiWithThread;
 import nick.jgame.init.*;
 import nick.jgame.input.*;
-import nick.jgame.util.GameUtil;
+import nick.jgame.util.io.FileUtil;
 import nick.jgame.util.math.Perlin;
 import nick.jgame.world.structures.*;
 import nick.jgame.world.util.*;
@@ -186,7 +186,7 @@ public final class World extends GuiWithThread {
 			System.err.println("World " + worldName + " does not load from a file!");
 			return;
 		}
-		final ArrayList<String> txt = GameUtil.loadTxt(saveLoc);
+		final ArrayList<String> txt = FileUtil.loadTxt(saveLoc);
 
 		for (String now : txt) {
 			String[ ] comp1 = now.split(":");
@@ -284,7 +284,7 @@ public final class World extends GuiWithThread {
 			}
 		}
 
-		GameUtil.writeTxt(saveLoc, text);
+		FileUtil.writeTxt(saveLoc, text);
 	}
 
 	private void setNextChunk( ) {
@@ -341,6 +341,7 @@ public final class World extends GuiWithThread {
 		if (KeyBinding.isDown(Bindings.exit)) {
 
 			MainGame.getInst( ).gotoGui(Guis.mainMenu);
+
 		}
 
 		if (KeyBinding.isDown(Bindings.moveUp)) {

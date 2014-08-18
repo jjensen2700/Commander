@@ -3,8 +3,8 @@ package nick.jgame.opts;
 import java.io.File;
 import java.util.*;
 
-import nick.jgame.util.GameUtil;
 import nick.jgame.util.debug.GameLog;
+import nick.jgame.util.io.FileUtil;
 
 public final class Options {
 
@@ -19,6 +19,7 @@ public final class Options {
 		addBoolOption("bigdebug", false);
 		addBoolOption("debugprinting", true);
 		addBoolOption("quadbuff", false);
+
 	}
 
 	/**
@@ -86,7 +87,7 @@ public final class Options {
 
 	public static final void loadOptions(final File source) {
 
-		final ArrayList<String> options = GameUtil.loadTxt(source);
+		final ArrayList<String> options = FileUtil.loadTxt(source);
 
 		for (String opt : options) {
 			final String[ ] parts = opt.split(":");
@@ -137,7 +138,7 @@ public final class Options {
 			}
 		}
 
-		GameUtil.writeTxt(toSaveTo, options);
+		FileUtil.writeTxt(toSaveTo, options);
 		GameLog.info("Options Saved!", false);
 	}
 }

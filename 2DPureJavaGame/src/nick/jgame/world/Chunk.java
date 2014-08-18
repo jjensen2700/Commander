@@ -8,9 +8,14 @@ public final class Chunk {
 
 	public static final byte	sideLength	= 32;
 
-	private ChunkCoords			coords;
+	private static boolean isOutOfBounds(final short x, final short y) {
 
-	private final Tile[ ][ ]	tiles		= new Tile[32][32];
+		return (x < 0) || (x >= sideLength) || (y < 0) || (y >= sideLength);
+	}
+
+	private final ChunkCoords	coords;
+
+	private final Tile[ ][ ]	tiles	= new Tile[32][32];
 
 	public Chunk(final World w, final byte chunkX, final byte chunkY) {
 
@@ -27,17 +32,12 @@ public final class Chunk {
 		return tiles[x][y];
 	}
 
-	private boolean isOutOfBounds(final short x, final short y) {
-
-		return (x < 0) || (x >= sideLength) || (y < 0) || (y >= sideLength);
-	}
-
 	/**
 	 * Use pixel precision.
 	 */
 	public boolean isVisible(final Render rend, final short x, final short y) {
 
-		short dist = 32 * 32;
+		final short dist = 32 * 32;
 		if (rend.isVisible(x, y)) { return true; }
 		if (rend.isVisible((short) (x + dist), (short) (y + dist))) { return true; }
 		if (rend.isVisible((short) (x + dist), y)) { return true; }

@@ -23,12 +23,13 @@ public final class GrassTile extends Tile {
 	@Override
 	public void update(final World w, final short x, final short y) {
 
-		if (!WorldUtil.isTileInRange(w, x, y, Tiles.water, 4)) {
+		final boolean hydrated = WorldUtil.isTileInRange(w, x, y, Tiles.water, 4);
+		if (!hydrated) {
 			w.setTile(Tiles.dirt, x, y);
 			return;
 		}
 		if ((ticksUnspread >= 2) && ((w.getRand( ).nextInt( ) % ticksUnspread) == 0)) {
-			if (WorldUtil.isTouchingWater(w, x, y) && WorldUtil.isTouchingTile(w, x, y, Tiles.dirt)) {
+			if (hydrated && WorldUtil.isTouchingTile(w, x, y, Tiles.dirt)) {
 
 				Tile[ ] around = WorldUtil.getTouching(w, x, y);
 				int index = 0;

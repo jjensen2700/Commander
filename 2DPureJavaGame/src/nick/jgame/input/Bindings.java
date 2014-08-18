@@ -33,9 +33,14 @@ public final class Bindings extends Thread {
 
 	private static Thread			thread;
 
-	public static final Bindings getInstance( ) {
+	public static Bindings getInstance( ) {
 
 		return inst;
+	}
+
+	public static boolean isShifting( ) {
+
+		return Keyboard.isKeyDown(KeyEvent.VK_SHIFT);
 	}
 
 	@Override
@@ -54,7 +59,7 @@ public final class Bindings extends Thread {
 	}
 
 	@Override
-	public final void start( ) {
+	public synchronized void start( ) {
 
 		Keyboard.dumpKeyBuff(true, true);
 		thread = new Thread(this, "Input");

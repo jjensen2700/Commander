@@ -26,7 +26,7 @@ public final class ScreenShotHandler {
 		try {
 			boolean made = loc.createNewFile( );
 			if (!made) {
-				GameLog.warn("File is made??" + loc.getAbsolutePath( ));
+				GameLog.warn("?File is made?" + loc.getAbsolutePath( ));
 				return;
 			}
 			ImageIO.write(img, "png", loc);

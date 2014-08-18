@@ -18,7 +18,7 @@ public final class LiquidTile extends Tile {
 
 		if (WorldUtil.isTouchingAir(w, x, y)) {
 
-			Tile[ ] around = WorldUtil.getTouching(w, x, y);
+			final Tile[ ] around = WorldUtil.getTouching(w, x, y);
 			int index = 0;
 
 			for (byte i = 0; i < around.length; i++) {

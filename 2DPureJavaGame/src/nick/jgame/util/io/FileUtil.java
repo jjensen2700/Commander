@@ -1,11 +1,11 @@
-package nick.jgame.util;
+package nick.jgame.util.io;
 
 import java.io.*;
 import java.util.*;
 
 import nick.jgame.util.debug.GameLog;
 
-public final class GameUtil {
+public final class FileUtil {
 
 	public static ArrayList<String> loadTxt(final File loc) {
 

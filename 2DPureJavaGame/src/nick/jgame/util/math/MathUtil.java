@@ -10,11 +10,6 @@ public final class MathUtil {
 		return String.valueOf(num);
 	}
 
-	public static int convertToArrayLoc(final int x, final int y, final int width) {
-
-		return x + (y * width);
-	}
-
 	public static long convertToLong(final String toChange) {
 
 		long toRet = 1;
@@ -34,6 +29,11 @@ public final class MathUtil {
 		return toRet;
 	}
 
+	public static int getArrayLoc(final int x, final int y, final int width) {
+
+		return x + (y * width);
+	}
+
 	public static byte getPrefPriority(final int updates, final byte current) {
 
 		return getPrefPriority((short) 60, updates, current);
@@ -42,7 +42,7 @@ public final class MathUtil {
 	public static byte getPrefPriority(final short fps, final int updates, final byte current) {
 
 		if (!Options.getBoolOption("adaptthreads")) { return current; }
-		if (((fps <= 30) || (updates < 57)) && (current < Thread.MAX_PRIORITY)) { return (byte) (current + 1); }
+		if ((fps <= 30) && (current < Thread.MAX_PRIORITY)) { return (byte) (current + 1); }
 
 		return current;
 	}

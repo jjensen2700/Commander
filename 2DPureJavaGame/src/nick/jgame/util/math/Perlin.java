@@ -12,9 +12,9 @@ public final class Perlin {
 		final float[ ][ ][ ] smoothNoise = new float[octaveCount][ ][ ];
 
 		/* Generate smooth noise */
-		for (int i = 0; i < octaveCount; i++)
+		for (int index = 0; index < octaveCount; index++)
 		{
-			smoothNoise[i] = genSmoothNoise(baseNoise, i);
+			smoothNoise[index] = genSmoothNoise(baseNoise, index);
 		}
 		// Constants
 		final int width = baseNoise.length;
@@ -55,37 +55,37 @@ public final class Perlin {
 	public static float[ ][ ] genSmoothNoise(final float[ ][ ] baseNoise, final int octave)
 	{
 
-		int width = baseNoise.length;
-		int height = baseNoise[0].length;
+		final int width = baseNoise.length;
+		final int height = baseNoise[0].length;
 
-		float[ ][ ] smoothNoise = new float[width][height];
+		final float[ ][ ] smoothNoise = new float[width][height];
 
-		int samplePeriod = (int) Math.pow(2, octave);
-		float sampleFrequency = 1.0f / samplePeriod;
+		final int samplePeriod = (int) Math.pow(2, octave);
+		final float sampleFrequency = 1.0f / samplePeriod;
 
 		for (int x = 0; x < width; x++)
 		{
-			// calculate the horizontal sampling indices
-			int sample_x0 = (x / samplePeriod) * samplePeriod;
-			int sample_x1 = (sample_x0 + samplePeriod) % width; // wrap around
-			float horizontal_blend = (x - sample_x0) * sampleFrequency;
+			// Calculate the horizontal sampling indices.
+			final int sample_x0 = (x / samplePeriod) * samplePeriod;
+			final int sample_x1 = (sample_x0 + samplePeriod) % width; // wrap around
+			final float horizontal_blend = (x - sample_x0) * sampleFrequency;
 
 			for (int y = 0; y < height; y++)
 			{
-				// calculate the vertical sampling indices
-				int sample_y0 = (y / samplePeriod) * samplePeriod;
-				int sample_y1 = (sample_y0 + samplePeriod) % height; // wrap around
-				float vertical_blend = (y - sample_y0) * sampleFrequency;
+				// Calculate the vertical sampling indices
+				final int sample_y0 = (y / samplePeriod) * samplePeriod;
+				final int sample_y1 = (sample_y0 + samplePeriod) % height; // wrap around
+				final float vertical_blend = (y - sample_y0) * sampleFrequency;
 
-				// blend the top two corners
-				float top = interpolate(baseNoise[sample_x0][sample_y0],
+				// Blend the top two corners
+				final float top = interpolate(baseNoise[sample_x0][sample_y0],
 						baseNoise[sample_x1][sample_y0], horizontal_blend);
 
-				// blend the bottom two corners
-				float bottom = interpolate(baseNoise[sample_x0][sample_y1],
+				// Blend the bottom two corners
+				final float bottom = interpolate(baseNoise[sample_x0][sample_y1],
 						baseNoise[sample_x1][sample_y1], horizontal_blend);
 
-				// final blend
+				// Final blend
 				smoothNoise[x][y] = interpolate(top, bottom, vertical_blend);
 			}
 		}

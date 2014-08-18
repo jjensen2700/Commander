@@ -23,9 +23,8 @@ public final class Town extends WorldStruct {
 
 		super(home, tileX, tileY, name);
 
-		if (home != null) {
-			calcTypes(home);
-		}
+		calcTypes(home);
+
 	}
 
 	private void addType(final int index, final Types type) {
@@ -45,13 +44,16 @@ public final class Town extends WorldStruct {
 		for (Tile t : surround) {
 			if (t == Tiles.water) {
 				isPort = true;
-
+				continue;
 			} else if (t == Tiles.grass) {
 				farmWeight++;
+				continue;
 			} else if (t == Tiles.stone) {
 				mineWeight++;
+				continue;
 			} else if (t == Tiles.dirt) {
 				tradeWeight++;
+
 			}
 
 		}
@@ -132,9 +134,7 @@ public final class Town extends WorldStruct {
 		}
 		if (population >= 100) {
 			population -= home.getRand( ).nextInt(5);
-		}
-
-		if ((population <= 0) && (getHealth( ) <= 0)) {
+		} else if ((population <= 0) && (getHealth( ) <= 0)) {
 			home.removeStruct(this);
 		}
 	}
