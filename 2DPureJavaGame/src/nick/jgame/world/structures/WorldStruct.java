@@ -54,9 +54,11 @@ public abstract class WorldStruct implements Renderable {
 		this.name = name;
 	}
 
-	public final void setOwner(final EntityOwner owner) {
+	public final void setOwner(final EntityOwner newOwner) {
 
-		this.owner = owner;
+		owner.unown(this);
+		owner = newOwner;
+		owner.addToOwned(this);
 	}
 
 	public abstract void update( );

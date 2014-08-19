@@ -91,6 +91,7 @@ public abstract class Entity implements Renderable {
 
 	public final void move(final int x, final int y) {
 
+		if (isStatic) { return; }
 		xLoc += x;
 		yLoc += y;
 

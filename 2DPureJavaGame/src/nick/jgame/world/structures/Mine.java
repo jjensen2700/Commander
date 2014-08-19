@@ -4,7 +4,7 @@ import nick.jgame.gfx.Render;
 import nick.jgame.init.Materials;
 import nick.jgame.world.World;
 
-public final class Mine extends WorldStruct {
+public final class Mine extends WorldStruct implements IMoneyMaker {
 
 	public static enum MineQuality {
 		EXCELLENT, GOOD, POOR;
@@ -79,6 +79,7 @@ public final class Mine extends WorldStruct {
 		return w.getTile(tileX, tileY).getTileMat( ) == Materials.stone;
 	}
 
+	@Override
 	public byte getProducedMoney( ) {
 
 		return (byte) (MineQuality.getMultiplier(quality) * MineType.getWorth(type));
