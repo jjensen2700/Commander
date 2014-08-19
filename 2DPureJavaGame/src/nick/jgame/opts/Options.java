@@ -3,6 +3,7 @@ package nick.jgame.opts;
 import java.io.File;
 import java.util.*;
 
+import nick.jgame.Constants;
 import nick.jgame.util.debug.GameLog;
 import nick.jgame.util.io.FileUtil;
 
@@ -11,6 +12,8 @@ public final class Options {
 	private static final HashMap<String, Boolean>	boolOpts	= new HashMap<>( );
 
 	private static final ArrayList<String>			listOpts	= new ArrayList<>( );
+
+	public static final File						optsFile	= new File(Constants.assetsLoc + "Options.txt");
 
 	private static final HashMap<String, Float>		valueOpts	= new HashMap<>( );
 
@@ -30,62 +33,60 @@ public final class Options {
 	 * @param defaultVal
 	 *            The value to start with or set to
 	 */
-	public static final void addBoolOption(final String name, final boolean defaultVal) {
+	public static void addBoolOption(final String name, final boolean defaultVal) {
 
 		final String toIn = name.toLowerCase( ).trim( );
 		listOpts.add("b_" + toIn);
 		boolOpts.put(toIn, defaultVal);
 	}
 
-	public static final void addValueOption(final String name, final float defaultVal) {
+	public static void addValueOption(final String name, final float defaultVal) {
 
 		final String toIn = name.toLowerCase( ).trim( );
 		listOpts.add("v_" + toIn);
 		valueOpts.put(toIn, defaultVal);
 	}
 
-	public static final boolean getBoolOption(final String name) {
+	public static boolean getBoolOption(final String name) {
 
 		String toUse = name.toLowerCase( ).trim( );
 		if (toUse.startsWith("v_")) {
 			GameLog.warn("Wrong option type!");
 			return false;
-		}
-		if (toUse.startsWith("b_")) {
+		} else if (toUse.startsWith("b_")) {
 			toUse = toUse.substring(2);
 		}
 		return boolOpts.get(toUse);
 	}
 
-	public static final int getNumOfBoolOpts( ) {
+	public static int getNumOfBoolOpts( ) {
 
 		return boolOpts.size( );
 	}
 
-	public static final int getNumOfOpts( ) {
+	public static int getNumOfOpts( ) {
 
 		return getNumOfBoolOpts( ) + getNumOfValOpts( );
 	}
 
-	public static final int getNumOfValOpts( ) {
+	public static int getNumOfValOpts( ) {
 
 		return valueOpts.size( );
 	}
 
-	public static final float getValueOption(final String name) {
+	public static float getValueOption(final String name) {
 
 		String toUse = name.toLowerCase( ).trim( );
 		if (toUse.startsWith("b_")) {
 			GameLog.warn("Wrong option type!");
 			return 0;
-		}
-		if (toUse.startsWith("v_")) {
+		} else if (toUse.startsWith("v_")) {
 			toUse = toUse.substring(2);
 		}
 		return valueOpts.get(name);
 	}
 
-	public static final void loadOptions(final File source) {
+	public static void loadOptions(final File source) {
 
 		final ArrayList<String> options = FileUtil.loadTxt(source);
 
@@ -108,7 +109,7 @@ public final class Options {
 		}
 	}
 
-	public static final void saveOptions(final File toSaveTo) {
+	public static void saveOptions(final File toSaveTo) {
 
 		// Init
 		GameLog.info("Saving Options...", false);

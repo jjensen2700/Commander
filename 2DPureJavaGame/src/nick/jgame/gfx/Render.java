@@ -3,24 +3,34 @@ package nick.jgame.gfx;
 import java.awt.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import nick.jgame.*;
+import nick.jgame.MainGame;
 import nick.jgame.util.render.TxtInfo;
 
 public final class Render {
 
-	public static final int						transColor	= 0x0f00ff;
+	public static final Font	bigFont		= new Font("Courier New", Font.BOLD, 32);
 
-	private short								height, width;
+	public static final Font	smallFont	= new Font("Courier New", 0, 12);
 
-	private int[ ]								pixels;
+	public static final int		transColor	= 0x0f00ff;
 
-	private final CopyOnWriteArrayList<TxtInfo>	txtList		= new CopyOnWriteArrayList<>( );
+	public static byte getBigFontSize( ) {
 
-	private short								xOff		= 0, yOff = 0;
+		return (byte) bigFont.getSize( );
+	}
+
+	private final short							height, width;
+
+	private final int[ ]						pixels;
+
+	private final CopyOnWriteArrayList<TxtInfo>	txtList	= new CopyOnWriteArrayList<>( );
+
+	private short								xOff	= 0, yOff = 0;
 
 	public Render(final short w, final short h) {
 
-		setSize(w, h);
+		this.width = w;
+		this.height = h;
 		pixels = new int[width * height];
 	}
 
@@ -83,10 +93,10 @@ public final class Render {
 
 		for (TxtInfo info : txtList) {
 			if ((info == null) || MainGame.getInst( ).isSwitchingGuis( )) { return; }
-			g.setFont(Constants.bigFont);
+			g.setFont(bigFont);
 			g.setColor(new Color(info.getColor( ), false));
 			if (info.useSmallFont( )) {
-				g.setFont(Constants.smallFont);
+				g.setFont(smallFont);
 			}
 			g.drawString(info.getTxt( ), info.getX( ), info.getY( ));
 		}
@@ -128,11 +138,6 @@ public final class Render {
 
 	}
 
-	public void setHeight(final short h) {
-
-		height = h;
-	}
-
 	private void setPixel(final int color, final int loc) {
 
 		if ((loc < 0) || (loc >= pixels.length)) { return; }
@@ -144,15 +149,4 @@ public final class Render {
 		setPixel(color, x + (y * width));
 	}
 
-	private void setSize(final short w, final short h) {
-
-		setHeight(h);
-		setWidth(w);
-
-	}
-
-	public void setWidth(final short w) {
-
-		width = w;
-	}
 }

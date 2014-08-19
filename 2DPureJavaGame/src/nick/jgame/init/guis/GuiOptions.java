@@ -27,7 +27,7 @@ public final class GuiOptions extends GuiWithThread {
 	public void close(final String name) {
 
 		super.close(name);
-		Options.saveOptions(Constants.optsFile);
+		Options.saveOptions(Options.optsFile);
 	}
 
 	@Override

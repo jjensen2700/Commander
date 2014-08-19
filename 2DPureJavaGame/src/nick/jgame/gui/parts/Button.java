@@ -1,6 +1,5 @@
 package nick.jgame.gui.parts;
 
-import nick.jgame.Constants;
 import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiRectComp;
 import nick.jgame.input.Mouse;
@@ -24,7 +23,7 @@ public final class Button extends GuiRectComp {
 		setBackColor(backColor);
 		setTxtColor(txtColor);
 
-		info = new TxtInfo(text, txtColor, (short) x, (short) (y + Constants.bigFont.getSize( )), useSmall);
+		info = new TxtInfo(text, txtColor, (short) x, (short) (y + Render.getBigFontSize( )), useSmall);
 	}
 
 	public int getBackColor( ) {

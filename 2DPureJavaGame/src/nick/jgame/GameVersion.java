@@ -29,11 +29,6 @@ public final class GameVersion {
 	 */
 	public static final byte	release			= 0;
 
-	/**
-	 * The pushed version number (Never resets).
-	 */
-	public static final short	versionNum		= 2;
-
 	// Static Methods
 	/**
 	 * @category Convenience

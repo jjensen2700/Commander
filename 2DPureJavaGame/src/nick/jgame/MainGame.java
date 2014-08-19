@@ -22,10 +22,9 @@ import nick.jgame.util.math.MathUtil;
 
 public final class MainGame extends Canvas implements Runnable {
 
-	// Instance variables
+	// Static variables
 	private static final JFrame		frame				= new JFrame( );
 
-	// Static variables
 	/**
 	 * The Main instance.
 	 */
@@ -46,6 +45,7 @@ public final class MainGame extends Canvas implements Runnable {
 
 	private static long				startTime;
 
+	// Static methods (Mostly getters)
 	private static void exit(final int code) {
 
 		frame.setVisible(false);
@@ -55,7 +55,6 @@ public final class MainGame extends Canvas implements Runnable {
 
 	}
 
-	// Static methods (Mostly getters)
 	public static GuiHolder getCurrentGui( ) {
 
 		return getInst( ).guiOpen;
@@ -130,6 +129,7 @@ public final class MainGame extends Canvas implements Runnable {
 		}
 	}
 
+	// Instance Variables.
 	/**
 	 * The Gui that is currently open.
 	 */
