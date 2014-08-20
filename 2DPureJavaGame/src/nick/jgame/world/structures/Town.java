@@ -11,13 +11,15 @@ public final class Town extends WorldStruct {
 		FARMING, MINING, NONE, TRADE;
 	}
 
-	private byte			defenseRating	= 1;
+	private byte			defenseRating;
 
-	private boolean			isPort			= false;
+	private boolean			isPort		= false;
 
-	private byte			population		= 2;
+	private short			maxPop		= 5000;
 
-	private final Types[ ]	types			= new Types[ ] { Types.NONE, Types.NONE };
+	private short			population	= 1000;
+
+	private final Types[ ]	types		= new Types[ ] { Types.NONE, Types.NONE };
 
 	public Town(final World home, final short tileX, final short tileY, final String name) {
 
@@ -37,7 +39,7 @@ public final class Town extends WorldStruct {
 
 	private void calcTypes(final World w) {
 
-		Tile[ ] surround = WorldUtil.getTouching(w, xLoc, yLoc);
+		Tile[ ] surround = WorldUtil.getTouching(w, getxLoc( ), getyLoc( ));
 		byte mineWeight = 0;
 		byte farmWeight = 0;
 		byte tradeWeight = 0;
@@ -98,10 +100,11 @@ public final class Town extends WorldStruct {
 
 	public int getHealth( ) {
 
-		return population + defenseRating;
+		if (population < (defenseRating * 1000)) { return defenseRating * 100; }
+		return (population + (defenseRating * 100)) / 100;
 	}
 
-	public byte getPop( ) {
+	public short getPop( ) {
 
 		return population;
 	}
@@ -111,7 +114,7 @@ public final class Town extends WorldStruct {
 		return types;
 	}
 
-	private boolean hasNoTypes( ) {
+	public boolean hasNoTypes( ) {
 
 		return (types[0] == Types.NONE) && (types[1] == Types.NONE);
 	}
@@ -119,6 +122,11 @@ public final class Town extends WorldStruct {
 	public boolean isPort( ) {
 
 		return isPort;
+	}
+
+	public boolean isType(final Types type) {
+
+		return (types[0] == type) && (types[1] == type);
 	}
 
 	@Override
@@ -130,12 +138,24 @@ public final class Town extends WorldStruct {
 	public void update( ) {
 
 		if (hasNoTypes( )) {
-			calcTypes(home);
+			calcTypes(getHome( ));
 		}
-		if (population >= 100) {
-			population -= home.getRand( ).nextInt(5);
+
+		if (population >= maxPop) {
+			population -= getHome( ).getRand( ).nextInt(5);
 		} else if ((population <= 0) && (getHealth( ) <= 0)) {
-			home.removeStruct(this);
+			getHome( ).removeStruct(this);
+		}
+
+		if (isType(Types.MINING)) {
+			final Mine m = WorldUtil.getClosestMine(getHome( ), getxLoc( ), getyLoc( ), (byte) 10);
+			if (m.getOwner( ) == getOwner( )) {
+				m.setIsProducing(true);
+			}
+		}
+
+		if (isType(Types.TRADE)) {
+			getOwner( ).addMoney(getHome( ).getRand( ).nextFloat( ));
 		}
 	}
 }

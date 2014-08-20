@@ -1,5 +1,6 @@
 package nick.jgame.world;
 
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.*;
 
@@ -9,6 +10,8 @@ import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiWithThread;
 import nick.jgame.init.*;
 import nick.jgame.input.*;
+import nick.jgame.opts.Options;
+import nick.jgame.util.debug.GameLog;
 import nick.jgame.util.io.FileUtil;
 import nick.jgame.util.math.Perlin;
 import nick.jgame.world.structures.*;
@@ -29,6 +32,10 @@ public final class World extends GuiWithThread {
 	private long							seed;
 
 	private final ArrayList<WorldStruct>	structs		= new ArrayList<>( );
+
+	private byte							tenCounter	= 0;
+
+	private float[ ][ ]						tileSet;
 
 	private ChunkCoords						toUpdate	= new ChunkCoords((byte) 0, (byte) 0);
 
@@ -106,7 +113,7 @@ public final class World extends GuiWithThread {
 			return;
 		}
 
-		float[ ][ ] tileSet = Perlin.getNoise(rand, getTileWidth( ), getTileHeight( ), (byte) 4);
+		tileSet = Perlin.getNoise(rand, getTileWidth( ), getTileHeight( ), (byte) 4);
 		WorldUtil.parsePerlinToTiles(this, tileSet, true);
 
 		fillStructList( );
@@ -129,9 +136,19 @@ public final class World extends GuiWithThread {
 		return getChunk(loc.getX( ), loc.getY( ));
 	}
 
+	public int getNumOfStructs( ) {
+
+		return this.structs.size( );
+	}
+
 	public Random getRand( ) {
 
 		return rand;
+	}
+
+	public WorldStruct getStruct(final int index) {
+
+		return this.structs.get(index);
 	}
 
 	public Tile getTile(final short x, final short y) {
@@ -165,8 +182,6 @@ public final class World extends GuiWithThread {
 	public void initGui( ) {
 
 		generate( );
-
-		update( );
 
 		finInit( );
 	}
@@ -321,23 +336,31 @@ public final class World extends GuiWithThread {
 	@Override
 	public void update( ) {
 
+		if (tenCounter > 10) {
+			tenCounter = 0;
+		}
 		if (!generated) {
 			generate( );
 
 		}
 
-		getChunk(toUpdate).update(this);
+		if ((tenCounter % 5) == 0) {
+			getChunk(toUpdate).update(this);
+
+			setNextChunk( );
+		}
 
 		for (Entity e : entities) {
 			e.update( );
 
 		}
-
-		for (WorldStruct t : structs) {
-			t.update( );
+		if ((tenCounter % 2) == 0) {
+			for (WorldStruct t : structs) {
+				t.update( );
+			}
 		}
+
 		// KeyBindings
-		KeyBinding.updateAll( );
 		if (KeyBinding.isDown(Bindings.exit)) {
 
 			MainGame.getInst( ).gotoGui(Guis.mainMenu);
@@ -365,8 +388,15 @@ public final class World extends GuiWithThread {
 			MainGame.getRend( ).moveOffsets((short) 1, (short) 0);
 
 		}
+		if (Options.getBoolOption("debugmode")) {
+			if (Mouse.getButton( ) == MouseEvent.BUTTON1) {
+				int tileMouseX = Mouse.getxLoc( ) / 32;
+				int tileMouseY = Mouse.getyLoc( ) / 32;
+				GameLog.info("X:" + tileMouseX + ", Y:" + tileMouseY + ", Z:" + tileSet[tileMouseX][tileMouseY], true);
+			}
+		}
 
-		setNextChunk( );
+		tenCounter++;
 	}
 
 }

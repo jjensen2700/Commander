@@ -5,7 +5,7 @@ import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiWithThread;
 import nick.jgame.gui.parts.Button;
 import nick.jgame.init.Guis;
-import nick.jgame.input.Bindings;
+import nick.jgame.input.*;
 
 public final class GuiMainMenu extends GuiWithThread {
 
@@ -51,15 +51,16 @@ public final class GuiMainMenu extends GuiWithThread {
 	@Override
 	public void update( ) {
 
-		if (play.isClicked( ) || Bindings.confirm.isPressed( )) {
+		if (play.isClicked( ) || KeyBinding.isDown(Bindings.confirm)) {
 
 			MainGame.getInst( ).gotoGui(Guis.world);
 
-		}
-		if (options.isClicked( )) {
+		} else if (options.isClicked( )) {
+
 			MainGame.getInst( ).gotoGui(Guis.optionsMenu);
-		}
-		if (exit.isClicked( ) || Bindings.exit.isPressed( )) {
+
+		} else if (exit.isClicked( ) || KeyBinding.isDown(Bindings.exit)) {
+
 			MainGame.stop(false, null);
 		}
 	}

@@ -4,6 +4,7 @@ import nick.jgame.init.Tiles;
 import nick.jgame.util.math.MathUtil;
 import nick.jgame.world.*;
 import nick.jgame.world.Tile.Material;
+import nick.jgame.world.structures.*;
 
 public final class WorldUtil {
 
@@ -15,6 +16,33 @@ public final class WorldUtil {
 	public static int getArea(final World w) {
 
 		return w.getTileHeight( ) * w.getTileWidth( );
+	}
+
+	public static Mine getClosestMine(final World w, final short x, final short y, final byte maxDist) {
+
+		for (byte xL = 0; xL < maxDist; xL++) {
+			for (byte yL = 0; yL < maxDist; yL++) {
+				short x1 = (short) (x + xL);
+				short y1 = (short) (y + yL);
+				short x2 = (short) (x - xL);
+				short y2 = (short) (y - yL);
+
+				if (getStructAtLoc(w, x1, y1) instanceof Mine) { return (Mine) getStructAtLoc(w, x1, y1); }
+				if (getStructAtLoc(w, x2, y1) instanceof Mine) { return (Mine) getStructAtLoc(w, x2, y1); }
+				if (getStructAtLoc(w, x1, y2) instanceof Mine) { return (Mine) getStructAtLoc(w, x1, y2); }
+				if (getStructAtLoc(w, x2, y2) instanceof Mine) { return (Mine) getStructAtLoc(w, x2, y2); }
+			}
+		}
+		return null;
+	}
+
+	public static WorldStruct getStructAtLoc(final World w, final short x, final short y) {
+
+		for (int i = 0; i < w.getNumOfStructs( ); i++) {
+			final WorldStruct ws = w.getStruct(i);
+			if ((ws.getxLoc( ) == x) && (ws.getyLoc( ) == y)) { return ws; }
+		}
+		return null;
 	}
 
 	public static Tile[ ] getTouching(final World w, final short x, final short y) {

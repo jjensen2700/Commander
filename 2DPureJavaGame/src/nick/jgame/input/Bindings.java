@@ -2,10 +2,7 @@ package nick.jgame.input;
 
 import java.awt.event.KeyEvent;
 
-import nick.jgame.MainGame;
-import nick.jgame.util.debug.GameLog;
-
-public final class Bindings extends Thread {
+public final class Bindings {
 
 	public static final KeyBinding	confirm		= new KeyBinding(KeyEvent.VK_ENTER, "confirm");
 
@@ -31,8 +28,6 @@ public final class Bindings extends Thread {
 
 	public static final KeyBinding	screenshot	= new KeyBinding(KeyEvent.VK_F1, "screenshot");
 
-	private static Thread			thread;
-
 	public static Bindings getInstance( ) {
 
 		return inst;
@@ -41,30 +36,6 @@ public final class Bindings extends Thread {
 	public static boolean isShifting( ) {
 
 		return Keyboard.isKeyDown(KeyEvent.VK_SHIFT);
-	}
-
-	@Override
-	public void run( ) {
-
-		while (MainGame.isRunning( )) {
-			KeyBinding.updateAll( );
-		}
-		Keyboard.dumpKeyBuff(true, true);
-
-		try {
-			thread.join( );
-		} catch (Exception e) {
-			GameLog.warn(e);
-		}
-	}
-
-	@Override
-	public synchronized void start( ) {
-
-		Keyboard.dumpKeyBuff(true, true);
-		thread = new Thread(this, "Input");
-		thread.setPriority(Thread.MIN_PRIORITY);
-		thread.start( );
 	}
 
 }

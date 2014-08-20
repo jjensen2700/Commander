@@ -22,7 +22,7 @@ public final class Options {
 		addBoolOption("bigdebug", false);
 		addBoolOption("debugprinting", true);
 		addBoolOption("quadbuff", false);
-
+		addBoolOption("debugmode", true);
 	}
 
 	/**

@@ -55,7 +55,7 @@ public final class MainGame extends Canvas implements Runnable {
 
 	}
 
-	public static GuiHolder getCurrentGui( ) {
+	public static synchronized GuiHolder getCurrentGui( ) {
 
 		return getInst( ).guiOpen;
 	}
@@ -183,34 +183,34 @@ public final class MainGame extends Canvas implements Runnable {
 	 * @param gui
 	 *            The gui to go to.
 	 */
-	public void gotoGui(final GuiHolder gui) {
+	public synchronized void gotoGui(final GuiHolder gui) {
 
 		if (isSwitchingGuis( )) {
 			GameLog.warn("Currently switching guis!");
 			return;
 		}
 
-		if (gui == guiOpen) {
-			GameLog.warn("Already in the " + gui.getName( ) + "!");
+		if (getCurrentGui( ) == gui) { return; }
 
-		}
 		switchingGuis = true;
 
 		renderer.dumpBuffs( );
 		renderer.dumpQueuedTxt( );
 
-		if (!gui.isInit( )) {
-			gui.initGui( );
+		guiOpen = gui;
+
+		if (!guiOpen.isInit( )) {
+			guiOpen.initGui( );
 		}
-		if (gui instanceof GuiWithThread) {
-			GuiWithThread threadGui = (GuiWithThread) gui;
+
+		if (guiOpen instanceof GuiWithThread) {
+			GuiWithThread threadGui = (GuiWithThread) guiOpen;
 			if (!threadGui.hasStarted( )) {
 				threadGui.start(gui.getName( ));
 			}
 		}
 
 		GameLog.info("Going to the " + gui.getName( ), false);
-		guiOpen = gui;
 
 		switchingGuis = false;
 	}
@@ -248,7 +248,7 @@ public final class MainGame extends Canvas implements Runnable {
 		}
 
 		renderer.dumpBuffs( );
-		if (isSwitchingGuis( ) || (guiOpen == null)) {
+		if ((guiOpen == null) || switchingGuis) {
 			renderProf.stopTiming( );
 			return;
 		}
@@ -256,7 +256,10 @@ public final class MainGame extends Canvas implements Runnable {
 		for (int loc = 0; loc < pixels.length; loc++) {
 			pixels[loc] = renderer.getPixel(loc);
 		}
-
+		if (bs.contentsLost( )) {
+			renderProf.stopTiming( );
+			return;
+		}
 		final Graphics g = bs.getDrawGraphics( );
 		if (g == null) {
 			GameLog.warn("The Graphics objects is null!");
@@ -340,8 +343,6 @@ public final class MainGame extends Canvas implements Runnable {
 
 		threadOn( );
 
-		Bindings.getInstance( ).start( );
-
 		gotoGui(Guis.mainMenu);
 
 		frame.setVisible(true);
@@ -356,17 +357,14 @@ public final class MainGame extends Canvas implements Runnable {
 
 	private void update( ) {
 
+		if ((getCurrentGui( ) == null) || isSwitchingGuis( )) { return; }
 		updateProf.startTiming( );
 
 		if (KeyBinding.isDown(Bindings.screenshot)) {
 			ScreenShotHandler.takeScreenShot(img);
 
 		}
-		if ((guiOpen == null) || isSwitchingGuis( )) {
-			GameLog.warn("A null GUI or switching!");
-			updateProf.stopTiming( );
-			return;
-		}
+
 		if (!guiOpen.hasOwnThread( )) {
 			guiOpen.update( );
 		}

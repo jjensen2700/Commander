@@ -3,8 +3,9 @@ package nick.jgame.world.structures;
 import nick.jgame.gfx.Render;
 import nick.jgame.init.Materials;
 import nick.jgame.world.World;
+import nick.jgame.world.structures.interfaces.*;
 
-public final class Mine extends WorldStruct implements IMoneyMaker {
+public final class Mine extends WorldStruct implements IMoneyMaker, IUpkeep {
 
 	public static enum MineQuality {
 		EXCELLENT, GOOD, POOR;
@@ -60,6 +61,8 @@ public final class Mine extends WorldStruct implements IMoneyMaker {
 		}
 	}
 
+	private boolean			isProducing;
+
 	private MineQuality		quality;
 
 	private MineQuantity	quantity;
@@ -82,7 +85,24 @@ public final class Mine extends WorldStruct implements IMoneyMaker {
 	@Override
 	public byte getProducedMoney( ) {
 
+		if (!isProducing) { return 0; }
 		return (byte) (MineQuality.getMultiplier(quality) * MineType.getWorth(type));
+	}
+
+	@Override
+	public float getUpkeep( ) {
+
+		if (isProducing( )) {
+			return .95f;
+		} else {
+			return .67f;
+		}
+	}
+
+	@Override
+	public boolean isProducing( ) {
+
+		return isProducing;
 	}
 
 	@Override
@@ -90,12 +110,19 @@ public final class Mine extends WorldStruct implements IMoneyMaker {
 
 	}
 
+	public void setIsProducing(final boolean b) {
+
+		isProducing = b;
+
+	}
+
 	@Override
 	public void update( ) {
 
-		owner.addMoney(getProducedMoney( ));
+		getOwner( ).addMoney(getProducedMoney( ) - getUpkeep( ));
+
 		if (ticksLived > (MineQuantity.getTickLife(quantity) * 1000)) {
-			home.removeStruct(this);
+			getHome( ).removeStruct(this);
 		}
 		ticksLived++;
 	}

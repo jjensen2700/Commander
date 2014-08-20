@@ -6,13 +6,19 @@ import nick.jgame.world.World;
 
 public abstract class WorldStruct implements Renderable {
 
-	protected final World	home;
+	public static enum Status {
+		NORMAL, SHUTDOWN, UNDER_ATTACK;
+	}
 
-	protected String		name;
+	private final World	home;
 
-	protected EntityOwner	owner;
+	private String		name;
 
-	protected final short	xLoc, yLoc;
+	private EntityOwner	owner;
+
+	private Status		status;
+
+	private final short	xLoc, yLoc;
 
 	protected WorldStruct(final World w, final short x, final short y, final String name) {
 
@@ -20,6 +26,7 @@ public abstract class WorldStruct implements Renderable {
 		this.yLoc = y;
 		this.name = name;
 		this.home = w;
+		setStatus(Status.NORMAL);
 	}
 
 	public abstract boolean canBePlacedHere(World w, short tileX, short tileY);
@@ -39,19 +46,24 @@ public abstract class WorldStruct implements Renderable {
 		return owner;
 	}
 
-	public final int getxLoc( ) {
+	public Status getStatus( ) {
+
+		return status;
+	}
+
+	public final short getxLoc( ) {
 
 		return xLoc;
 	}
 
-	public final int getyLoc( ) {
+	public final short getyLoc( ) {
 
 		return yLoc;
 	}
 
-	public final void setName(final String name) {
+	public final void setName(final String newName) {
 
-		this.name = name;
+		name = newName;
 	}
 
 	public final void setOwner(final EntityOwner newOwner) {
@@ -59,6 +71,11 @@ public abstract class WorldStruct implements Renderable {
 		owner.unown(this);
 		owner = newOwner;
 		owner.addToOwned(this);
+	}
+
+	public void setStatus(final Status status) {
+
+		this.status = status;
 	}
 
 	public abstract void update( );

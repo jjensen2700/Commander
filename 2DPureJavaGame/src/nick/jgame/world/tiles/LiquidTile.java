@@ -16,9 +16,20 @@ public final class LiquidTile extends Tile {
 	@Override
 	public void update(final World w, final short x, final short y) {
 
+		final Tile[ ] around = WorldUtil.getTouching(w, x, y);
+
+		byte touchNonWater = 0;
+
+		for (byte i = 0; i < around.length; i++) {
+			if ((around[i] == Tiles.stone) || (around[i] == Tiles.dirt)) {
+				touchNonWater++;
+			}
+		}
+		if (touchNonWater > 3) {
+			w.setTile(Tiles.dirt, x, y);
+		}
 		if (WorldUtil.isTouchingAir(w, x, y)) {
 
-			final Tile[ ] around = WorldUtil.getTouching(w, x, y);
 			int index = 0;
 
 			for (byte i = 0; i < around.length; i++) {
