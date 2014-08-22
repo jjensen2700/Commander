@@ -8,12 +8,7 @@ public final class PerlinHeights {
 	static {
 		PerlinHeights.setSeaLevel((float) .395);
 		PerlinHeights.setBareRockStart((float) .575);
-		PerlinHeights.setArableZone((float) .5);
-	}
 
-	public static float getArableZone( ) {
-
-		return perlinHeights.get("arablezone");
 	}
 
 	public static float getBareRockStart( ) {
@@ -24,12 +19,6 @@ public final class PerlinHeights {
 	public static float getSeaLevel( ) {
 
 		return perlinHeights.get("sealvl");
-	}
-
-	public static void setArableZone(final float f) {
-
-		perlinHeights.put("arablezone", f);
-
 	}
 
 	public static void setBareRockStart(final float f) {

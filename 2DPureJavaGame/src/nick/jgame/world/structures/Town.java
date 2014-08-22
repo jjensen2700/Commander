@@ -53,11 +53,10 @@ public final class Town extends WorldStruct {
 			} else if (t == Tiles.stone) {
 				mineWeight++;
 				continue;
-			} else if (t == Tiles.dirt) {
+			} else if (getHome( ).getRand( ).nextBoolean( )) {
 				tradeWeight++;
-
+				continue;
 			}
-
 		}
 
 		if (mineWeight > Math.max(farmWeight, tradeWeight)) {

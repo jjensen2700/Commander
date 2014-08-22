@@ -84,9 +84,9 @@ public final class World extends GuiWithThread {
 
 	private void fillChunks( ) {
 
-		for (byte x = 0; x < chunks.length; x++) {
-			for (byte y = 0; y < chunks[0].length; y++) {
-				chunks[x][y] = new Chunk(this, x, y);
+		for (byte x = 0; x < 5; x++) {
+			for (byte y = 0; y < 5; y++) {
+				chunks[x][y] = new Chunk(x, y);
 			}
 		}
 

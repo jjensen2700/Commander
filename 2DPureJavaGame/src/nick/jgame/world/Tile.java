@@ -96,6 +96,11 @@ public class Tile implements OffsetRenderable {
 		return tileMat;
 	}
 
+	public boolean isArable( ) {
+
+		return this == Tiles.grass;
+	}
+
 	public final boolean isInvisTile( ) {
 
 		return img == null;
@@ -108,11 +113,6 @@ public class Tile implements OffsetRenderable {
 
 	public void onCollide(final Entity entity, final short x, final short y) {
 
-	}
-
-	public boolean producesLight( ) {
-
-		return false;
 	}
 
 	private final void register( ) {

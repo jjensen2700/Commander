@@ -17,7 +17,7 @@ public final class Chunk {
 
 	private final Tile[ ][ ]	tiles	= new Tile[32][32];
 
-	public Chunk(final World w, final byte chunkX, final byte chunkY) {
+	public Chunk(final byte chunkX, final byte chunkY) {
 
 		coords = new ChunkCoords(chunkY, chunkY);
 	}
@@ -51,6 +51,7 @@ public final class Chunk {
 			System.err.println(x + "," + y + " is not a valid chunk tile location!");
 			return;
 		}
+		if (tiles[x][y] == Tiles.stone) { return; }
 		tiles[x][y] = t;
 	}
 
@@ -58,10 +59,13 @@ public final class Chunk {
 
 		for (short x = 0; x < sideLength; x++) {
 			for (short y = 0; y < sideLength; y++) {
-				final Tile t = getTile(x, y);
+
+				short tileX = (short) (x + (coords.getX( ) * sideLength));
+				short tileY = (short) (y + (coords.getY( ) * sideLength));
+				final Tile t = w.getTile(tileX, tileY);
 
 				if (t.doesTick( )) {
-					t.update(w, (short) (x + (coords.getX( ) * sideLength)), (short) (y + (coords.getY( ) * sideLength)));
+					t.update(w, tileX, tileY);
 
 				}
 

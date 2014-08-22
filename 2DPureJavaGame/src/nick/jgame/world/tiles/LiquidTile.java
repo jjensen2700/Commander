@@ -20,13 +20,14 @@ public final class LiquidTile extends Tile {
 
 		byte touchNonWater = 0;
 
-		for (byte i = 0; i < around.length; i++) {
-			if ((around[i] == Tiles.stone) || (around[i] == Tiles.dirt)) {
+		for (byte i = 0; i < 4; i++) {
+			if ((around[i] == Tiles.stone) || (around[i] == Tiles.grass)) {
 				touchNonWater++;
 			}
 		}
-		if (touchNonWater > 3) {
-			w.setTile(Tiles.dirt, x, y);
+		if (touchNonWater >= 3) {
+			w.setTile(Tiles.grass, x, y);
+			return;
 		}
 		if (WorldUtil.isTouchingAir(w, x, y)) {
 

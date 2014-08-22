@@ -107,7 +107,7 @@ public final class WorldUtil {
 
 		float waterLvl = PerlinHeights.getSeaLevel( );
 		float stoneStart = PerlinHeights.getBareRockStart( );
-		float grassBelow = PerlinHeights.getArableZone( );
+
 		for (short x = 0; x < w.getTileWidth( ); x++) {
 			for (short y = 0; y < w.getTileHeight( ); y++) {
 
@@ -115,10 +115,8 @@ public final class WorldUtil {
 
 				if (current < waterLvl) {
 					w.setTile(Tiles.water, x, y);
-				} else if ((current > waterLvl) && (current < grassBelow)) {
+				} else if ((current > waterLvl) && (current < stoneStart)) {
 					w.setTile(Tiles.grass, x, y);
-				} else if ((current > grassBelow) && (current < stoneStart)) {
-					w.setTile(Tiles.dirt, x, y);
 				} else if (current > stoneStart) {
 					w.setTile(Tiles.stone, x, y);
 				}

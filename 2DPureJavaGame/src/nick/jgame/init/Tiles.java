@@ -7,9 +7,7 @@ public final class Tiles {
 
 	public static final Tile	air		= AirTile.getInstance( );
 
-	public static final Tile	dirt	= new Tile(Materials.dirt, Sprites.dirt, false, "dirt");
-
-	public static final Tile	grass	= GrassTile.getInstance( );
+	public static final Tile	grass	= new Tile(Materials.grass, Sprites.grass, false, "grass");
 
 	public static final Tile	stone	= new Tile(Materials.stone, Sprites.stone, false, "stone");
 
