@@ -11,13 +11,15 @@ import nick.jgame.gui.GuiWithThread;
 import nick.jgame.init.*;
 import nick.jgame.input.*;
 import nick.jgame.opts.Options;
-import nick.jgame.util.debug.GameLog;
+import nick.jgame.util.debug.*;
 import nick.jgame.util.io.FileUtil;
 import nick.jgame.util.math.Perlin;
 import nick.jgame.world.structures.*;
 import nick.jgame.world.util.*;
 
 public final class World extends GuiWithThread {
+
+	public static final ChunkCoords			max			= new ChunkCoords((byte) 5, (byte) 5);
 
 	private Chunk[ ][ ]						chunks;
 
@@ -61,7 +63,7 @@ public final class World extends GuiWithThread {
 
 		this(name, false);
 
-		chunks = new Chunk[5][5];
+		chunks = new Chunk[max.getX( )][max.getY( )];
 		fillChunks( );
 
 		seed = WorldUtil.calcSeed(this);
@@ -84,8 +86,8 @@ public final class World extends GuiWithThread {
 
 	private void fillChunks( ) {
 
-		for (byte x = 0; x < 5; x++) {
-			for (byte y = 0; y < 5; y++) {
+		for (byte x = 0; x < max.getX( ); x++) {
+			for (byte y = 0; y < max.getY( ); y++) {
 				chunks[x][y] = new Chunk(x, y);
 			}
 		}
@@ -94,8 +96,8 @@ public final class World extends GuiWithThread {
 
 	private void fillStructList( ) {
 
-		for (int x = 0; x < chunks.length; x++) {
-			for (int y = 0; y < chunks[0].length; y++) {
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 5; y++) {
 				this.structs.add(new Town(this, (short) (x * 32), (short) (y * 32), "test"));
 			}
 		}
@@ -126,8 +128,8 @@ public final class World extends GuiWithThread {
 
 		if ((chunkX < 0)
 				|| (chunkY < 0)
-				|| (chunkX >= chunks.length)
-				|| (chunkY >= chunks[0].length)) { return null; }
+				|| (chunkX >= max.getX( ))
+				|| (chunkY >= max.getY( ))) { return null; }
 		return chunks[chunkX][chunkY];
 	}
 
@@ -278,6 +280,7 @@ public final class World extends GuiWithThread {
 		for (WorldStruct t : structs) {
 			t.render(rend);
 		}
+		DebugUtil.drawRect(rend, 0 + xOff, 0 + yOff, (32 * 32), (32 * 32), 0xff0000);
 	}
 
 	public void save( ) {
@@ -305,11 +308,11 @@ public final class World extends GuiWithThread {
 	private void setNextChunk( ) {
 
 		toUpdate.setY((byte) (toUpdate.getY( ) + 1));
-		if (toUpdate.getY( ) >= chunks[0].length) {
+		if (toUpdate.getY( ) >= max.getY( )) {
 			toUpdate.setY((byte) 0);
 			toUpdate.setX((byte) (toUpdate.getX( ) + 1));
 		}
-		if (toUpdate.getX( ) >= chunks.length) {
+		if (toUpdate.getX( ) >= max.getX( )) {
 			toUpdate.set((byte) 0);
 		}
 
