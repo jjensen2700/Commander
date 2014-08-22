@@ -25,6 +25,8 @@ public final class World extends GuiWithThread {
 
 	private final ArrayList<Entity>			entities	= new ArrayList<>( );
 
+	private boolean							firstUpdate	= true;
+
 	private boolean							generated	= false, loadFromFile;
 
 	private Random							rand;
@@ -308,11 +310,11 @@ public final class World extends GuiWithThread {
 	private void setNextChunk( ) {
 
 		toUpdate.setY((byte) (toUpdate.getY( ) + 1));
-		if (toUpdate.getY( ) >= max.getY( )) {
+		if (toUpdate.getY( ) > 4) {
 			toUpdate.setY((byte) 0);
 			toUpdate.setX((byte) (toUpdate.getX( ) + 1));
 		}
-		if (toUpdate.getX( ) >= max.getX( )) {
+		if (toUpdate.getX( ) > 4) {
 			toUpdate.set((byte) 0);
 		}
 
@@ -346,8 +348,18 @@ public final class World extends GuiWithThread {
 			generate( );
 
 		}
+		if (firstUpdate) {
+
+			for (byte x = 0; x < max.getX( ); x++) {
+				for (byte y = 0; y < max.getY( ); y++) {
+					getChunk(x, y).update(this);
+				}
+			}
+			firstUpdate = false;
+		}
 
 		if ((tenCounter % 5) == 0) {
+
 			getChunk(toUpdate).update(this);
 
 			setNextChunk( );

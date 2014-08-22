@@ -6,7 +6,7 @@ public final class PerlinHeights {
 
 	private static final HashMap<String, Float>	perlinHeights	= new HashMap<>( );
 	static {
-		PerlinHeights.setSeaLevel((float) .395);
+		PerlinHeights.setSeaLevel((float) .4);
 		PerlinHeights.setBareRockStart((float) .575);
 
 	}

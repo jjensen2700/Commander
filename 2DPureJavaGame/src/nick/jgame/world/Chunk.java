@@ -2,6 +2,7 @@ package nick.jgame.world;
 
 import nick.jgame.gfx.Render;
 import nick.jgame.init.Tiles;
+import nick.jgame.util.debug.GameLog;
 import nick.jgame.world.util.ChunkCoords;
 
 public final class Chunk {
@@ -19,7 +20,7 @@ public final class Chunk {
 
 	public Chunk(final byte chunkX, final byte chunkY) {
 
-		coords = new ChunkCoords(chunkY, chunkY);
+		coords = new ChunkCoords(chunkX, chunkY);
 	}
 
 	public Tile getTile(final short x, final short y) {
@@ -62,7 +63,7 @@ public final class Chunk {
 
 				short tileX = (short) (x + (coords.getX( ) * sideLength));
 				short tileY = (short) (y + (coords.getY( ) * sideLength));
-				final Tile t = w.getTile(tileX, tileY);
+				final Tile t = getTile(x, y);
 
 				if (t.doesTick( )) {
 					t.update(w, tileX, tileY);
@@ -71,5 +72,6 @@ public final class Chunk {
 
 			}
 		}
+		GameLog.info("Updated chunk @ " + this.coords.getX( ) + ", " + this.coords.getY( ), true);
 	}
 }

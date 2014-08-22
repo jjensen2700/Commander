@@ -20,7 +20,7 @@ public final class LiquidTile extends Tile {
 
 		byte touchNonWater = 0;
 
-		for (byte i = 0; i < 4; i++) {
+		for (byte i = 0; i < around.length; i++) {
 			if ((around[i] == Tiles.stone) || (around[i] == Tiles.grass)) {
 				touchNonWater++;
 			}
