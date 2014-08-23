@@ -11,9 +11,9 @@ public abstract class EntityOwner extends Entity {
 
 	private final ArrayList<WorldStruct>	owned	= new ArrayList<>( );
 
-	public EntityOwner(final World w, final short xSpawn, final short ySpawn, final byte wide, final byte high) {
+	public EntityOwner(final World w) {
 
-		super(w, xSpawn, ySpawn, wide, high);
+		super(w, (short) 0, (short) 0, (byte) 0, (byte) 0);
 		this.isStatic = true;
 	}
 
@@ -24,7 +24,7 @@ public abstract class EntityOwner extends Entity {
 
 	/**
 	 * Use WorldStruct.setOwner() to set ownership.
-	 * 
+	 *
 	 * @param struct
 	 */
 	public final void addToOwned(final WorldStruct struct) {

@@ -4,11 +4,10 @@ import java.io.File;
 import java.util.*;
 
 import nick.jgame.*;
-import nick.jgame.entity.Entity;
+import nick.jgame.entity.*;
 import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiWithThread;
-import nick.jgame.init.*;
-import nick.jgame.input.*;
+import nick.jgame.init.Tiles;
 import nick.jgame.util.io.FileUtil;
 import nick.jgame.util.math.Perlin;
 import nick.jgame.world.structures.*;
@@ -61,7 +60,7 @@ public final class World extends GuiWithThread {
 		seed = WorldUtil.calcSeed(this);
 
 		rand = new Random(seed);
-
+		this.spawnIn(new EntityPlayer(this));
 	}
 
 	public World(final String name, final File loc) {
@@ -69,7 +68,7 @@ public final class World extends GuiWithThread {
 		this(name, true);
 		saveLoc = loc;
 		load( );
-
+		this.spawnIn(new EntityPlayer(this));
 	}
 
 	@Override
@@ -116,6 +115,7 @@ public final class World extends GuiWithThread {
 		}
 
 		tileSet = Perlin.getNoise(rand, getTileWidth( ), getTileHeight( ), (byte) 4);
+		tileSet = Perlin.roundNoise(tileSet, (byte) 2);
 		WorldUtil.parsePerlinToTiles(this, tileSet, true);
 
 		fillStructList( );
@@ -378,39 +378,6 @@ public final class World extends GuiWithThread {
 			for (WorldStruct t : structs) {
 				t.update( );
 			}
-		}
-
-		// KeyBindings
-		if (KeyBinding.isDown(Bindings.exit)) {
-
-			MainGame.getInst( ).gotoGui(Guis.mainMenu);
-
-		}
-		byte speed = 1;
-		if (KeyBinding.isDown(Bindings.speed)) {
-			speed++;
-		}
-
-		if (KeyBinding.isDown(Bindings.moveUp)) {
-
-			MainGame.getRend( ).moveOffsets((short) 0, (short) (-speed));
-
-		}
-		if (KeyBinding.isDown(Bindings.moveDown)) {
-
-			MainGame.getRend( ).moveOffsets((short) 0, speed);
-
-		}
-
-		if (KeyBinding.isDown(Bindings.moveLeft)) {
-
-			MainGame.getRend( ).moveOffsets((short) -speed, (short) 0);
-
-		}
-		if (KeyBinding.isDown(Bindings.moveRight)) {
-
-			MainGame.getRend( ).moveOffsets(speed, (short) 0);
-
 		}
 
 		tenCounter++;

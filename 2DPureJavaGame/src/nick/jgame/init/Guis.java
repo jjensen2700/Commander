@@ -9,5 +9,5 @@ public final class Guis {
 
 	public static final GuiOptions	optionsMenu	= new GuiOptions( );
 
-	public static final World		world		= new World("main", (byte) 64, (byte) 64);
+	public static final World		world		= new World("test", (byte) 32, (byte) 32);
 }

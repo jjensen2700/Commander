@@ -119,6 +119,8 @@ public final class WorldUtil {
 					w.setTile(Tiles.grass, x, y);
 				} else if (current > stoneStart) {
 					w.setTile(Tiles.stone, x, y);
+				} else {
+					w.setTile(Tiles.grass, x, y);
 				}
 
 				if (stoneBorder) {
