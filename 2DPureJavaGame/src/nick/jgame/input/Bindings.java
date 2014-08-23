@@ -28,6 +28,8 @@ public final class Bindings {
 
 	public static final KeyBinding	screenshot	= new KeyBinding(KeyEvent.VK_F1, "screenshot");
 
+	public static final KeyBinding	speed		= new KeyBinding(KeyEvent.VK_SHIFT, "speed");
+
 	public static Bindings getInstance( ) {
 
 		return inst;

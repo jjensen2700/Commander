@@ -2,7 +2,6 @@ package nick.jgame.world;
 
 import nick.jgame.gfx.Render;
 import nick.jgame.init.Tiles;
-import nick.jgame.util.debug.GameLog;
 import nick.jgame.world.util.ChunkCoords;
 
 public final class Chunk {
@@ -52,7 +51,7 @@ public final class Chunk {
 			System.err.println(x + "," + y + " is not a valid chunk tile location!");
 			return;
 		}
-		if (tiles[x][y] == Tiles.stone) { return; }
+
 		tiles[x][y] = t;
 	}
 
@@ -72,6 +71,5 @@ public final class Chunk {
 
 			}
 		}
-		GameLog.info("Updated chunk @ " + this.coords.getX( ) + ", " + this.coords.getY( ), true);
 	}
 }

@@ -55,6 +55,7 @@ public final class GuiOptions extends GuiWithThread {
 	@Override
 	public void update( ) {
 
+		if (MainGame.getCurrentGui( ) != this) { return; }
 		if (exit.isClicked( ) || KeyBinding.isDown(Bindings.exit)) {
 
 			MainGame.getInst( ).gotoGui(Guis.mainMenu);

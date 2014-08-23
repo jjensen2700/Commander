@@ -51,6 +51,7 @@ public final class GuiMainMenu extends GuiWithThread {
 	@Override
 	public void update( ) {
 
+		if (MainGame.getCurrentGui( ) != this) { return; }
 		if (play.isClicked( ) || KeyBinding.isDown(Bindings.confirm)) {
 
 			MainGame.getInst( ).gotoGui(Guis.world);

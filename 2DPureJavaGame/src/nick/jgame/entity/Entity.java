@@ -27,6 +27,11 @@ public abstract class Entity implements Renderable {
 		setLoc(xSpawn, ySpawn);
 	}
 
+	public String getSaveText( ) {
+
+		return "loc:" + xLoc + ", " + yLoc;
+	}
+
 	public final short getTileXLoc( ) {
 
 		return (short) (xLoc / 32);

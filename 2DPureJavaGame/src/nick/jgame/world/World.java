@@ -1,6 +1,5 @@
 package nick.jgame.world;
 
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.*;
 
@@ -10,16 +9,12 @@ import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiWithThread;
 import nick.jgame.init.*;
 import nick.jgame.input.*;
-import nick.jgame.opts.Options;
-import nick.jgame.util.debug.*;
 import nick.jgame.util.io.FileUtil;
 import nick.jgame.util.math.Perlin;
 import nick.jgame.world.structures.*;
 import nick.jgame.world.util.*;
 
 public final class World extends GuiWithThread {
-
-	public static final ChunkCoords			max			= new ChunkCoords((byte) 5, (byte) 5);
 
 	private Chunk[ ][ ]						chunks;
 
@@ -34,6 +29,8 @@ public final class World extends GuiWithThread {
 	private File							saveLoc;
 
 	private long							seed;
+
+	private ChunkCoords						size;
 
 	private final ArrayList<WorldStruct>	structs		= new ArrayList<>( );
 
@@ -53,24 +50,25 @@ public final class World extends GuiWithThread {
 
 	}
 
-	public World(final String name, final File loc) {
-
-		this(name, true);
-		saveLoc = loc;
-		load( );
-
-	}
-
-	public World(final String name, final short xLength, final short yLength) {
+	public World(final String name, final byte xLength, final byte yLength) {
 
 		this(name, false);
 
-		chunks = new Chunk[max.getX( )][max.getY( )];
+		chunks = new Chunk[xLength][yLength];
+		size = new ChunkCoords(xLength, yLength);
 		fillChunks( );
 
 		seed = WorldUtil.calcSeed(this);
 
 		rand = new Random(seed);
+
+	}
+
+	public World(final String name, final File loc) {
+
+		this(name, true);
+		saveLoc = loc;
+		load( );
 
 	}
 
@@ -88,8 +86,8 @@ public final class World extends GuiWithThread {
 
 	private void fillChunks( ) {
 
-		for (byte x = 0; x < max.getX( ); x++) {
-			for (byte y = 0; y < max.getY( ); y++) {
+		for (byte x = 0; x < size.getX( ); x++) {
+			for (byte y = 0; y < size.getY( ); y++) {
 				chunks[x][y] = new Chunk(x, y);
 			}
 		}
@@ -100,7 +98,7 @@ public final class World extends GuiWithThread {
 
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 5; y++) {
-				this.structs.add(new Town(this, (short) (x * 32), (short) (y * 32), "test"));
+				structs.add(new Town(this, (short) (x * 32), (short) (y * 32), "test"));
 			}
 		}
 
@@ -130,8 +128,8 @@ public final class World extends GuiWithThread {
 
 		if ((chunkX < 0)
 				|| (chunkY < 0)
-				|| (chunkX >= max.getX( ))
-				|| (chunkY >= max.getY( ))) { return null; }
+				|| (chunkX >= size.getX( ))
+				|| (chunkY >= size.getY( ))) { return null; }
 		return chunks[chunkX][chunkY];
 	}
 
@@ -169,12 +167,12 @@ public final class World extends GuiWithThread {
 
 	public int getTileHeight( ) {
 
-		return Chunk.sideLength * chunks[0].length;
+		return Chunk.sideLength * size.getY( );
 	}
 
 	public int getTileWidth( ) {
 
-		return Chunk.sideLength * chunks.length;
+		return Chunk.sideLength * size.getX( );
 	}
 
 	public String getWorldName( ) {
@@ -282,13 +280,12 @@ public final class World extends GuiWithThread {
 		for (WorldStruct t : structs) {
 			t.render(rend);
 		}
-		DebugUtil.drawRect(rend, 0 + xOff, 0 + yOff, (32 * 32), (32 * 32), 0xff0000);
 	}
 
 	public void save( ) {
 
 		if (!loadFromFile) {
-			saveLoc = new File("res/worlds/" + seed + ".txt");
+			saveLoc = new File(Constants.assetsLoc + "worlds" + File.separator + seed + ".txt");
 		}
 		final ArrayList<String> text = new ArrayList<>( );
 		text.add("versionWrittenIn:" + GameVersion.getVersion( ));
@@ -300,10 +297,17 @@ public final class World extends GuiWithThread {
 		for (short x = 0; x < getTileWidth( ); x++) {
 			for (short y = 0; y < getTileHeight( ); y++) {
 				Tile t = getTile(x, y);
-				text.add(t.getName( ) + ':' + x + ',' + y);
+				text.add(t.getName( ) + ':' + x + ", " + y);
 			}
 		}
-
+		text.add("entities:");
+		for (Entity e : entities) {
+			text.add(e.getSaveText( ));
+		}
+		text.add("structs:");
+		for (WorldStruct ws : structs) {
+			text.add(ws.getSaveText( ));
+		}
 		FileUtil.writeTxt(saveLoc, text);
 	}
 
@@ -341,6 +345,7 @@ public final class World extends GuiWithThread {
 	@Override
 	public void update( ) {
 
+		if (MainGame.getCurrentGui( ) != this) { return; }
 		if (tenCounter > 10) {
 			tenCounter = 0;
 		}
@@ -350,8 +355,8 @@ public final class World extends GuiWithThread {
 		}
 		if (firstUpdate) {
 
-			for (byte x = 0; x < max.getX( ); x++) {
-				for (byte y = 0; y < max.getY( ); y++) {
+			for (byte x = 0; x < size.getX( ); x++) {
+				for (byte y = 0; y < size.getY( ); y++) {
 					getChunk(x, y).update(this);
 				}
 			}
@@ -381,34 +386,31 @@ public final class World extends GuiWithThread {
 			MainGame.getInst( ).gotoGui(Guis.mainMenu);
 
 		}
+		byte speed = 1;
+		if (KeyBinding.isDown(Bindings.speed)) {
+			speed++;
+		}
 
 		if (KeyBinding.isDown(Bindings.moveUp)) {
 
-			MainGame.getRend( ).moveOffsets((short) 0, (short) -1);
+			MainGame.getRend( ).moveOffsets((short) 0, (short) (-speed));
 
 		}
 		if (KeyBinding.isDown(Bindings.moveDown)) {
 
-			MainGame.getRend( ).moveOffsets((short) 0, (short) 1);
+			MainGame.getRend( ).moveOffsets((short) 0, speed);
 
 		}
 
 		if (KeyBinding.isDown(Bindings.moveLeft)) {
 
-			MainGame.getRend( ).moveOffsets((short) -1, (short) 0);
+			MainGame.getRend( ).moveOffsets((short) -speed, (short) 0);
 
 		}
 		if (KeyBinding.isDown(Bindings.moveRight)) {
 
-			MainGame.getRend( ).moveOffsets((short) 1, (short) 0);
+			MainGame.getRend( ).moveOffsets(speed, (short) 0);
 
-		}
-		if (Options.getBoolOption("debugmode")) {
-			if (Mouse.getButton( ) == MouseEvent.BUTTON1) {
-				int tileMouseX = Mouse.getxLoc( ) / 32;
-				int tileMouseY = Mouse.getyLoc( ) / 32;
-				GameLog.info("X:" + tileMouseX + ", Y:" + tileMouseY + ", Z:" + tileSet[tileMouseX][tileMouseY], true);
-			}
 		}
 
 		tenCounter++;

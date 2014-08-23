@@ -1,6 +1,7 @@
 package nick.jgame;
 
 import java.awt.Dimension;
+import java.io.File;
 
 /**
  * A class to store gamewide static unchanging variables and methods.
@@ -14,7 +15,7 @@ public final class Constants {
 	/**
 	 * The resource folder location.
 	 */
-	public static final String	assetsLoc		= "res/";
+	public static final String	assetsLoc		= "res" + File.separator;
 
 	/**
 	 * The game's displayable name.

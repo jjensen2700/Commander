@@ -46,6 +46,11 @@ public abstract class WorldStruct implements Renderable {
 		return owner;
 	}
 
+	public String getSaveText( ) {
+
+		return "loc:" + xLoc + ", " + yLoc;
+	}
+
 	public Status getStatus( ) {
 
 		return status;
