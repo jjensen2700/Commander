@@ -15,31 +15,33 @@ public final class Constants {
 	/**
 	 * The resource folder location.
 	 */
-	public static final String	assetsLoc		= "res" + File.separator;
+	public static final String		assetsLoc		= "res" + File.separator;
+
+	public static final String[ ]	credits			= new String[ ] { "Head of Development: Nick Baron", "Kyle McDonagh" };
 
 	/**
 	 * The game's displayable name.
 	 */
-	public static final String	gameName		= "Commander (Working Title)";
+	public static final String		gameName		= "Commander (Working Title)";
 
 	/**
 	 * The number of nanoseconds in one millisecond (For conversion purposes).
 	 */
-	public static final int		nsInMs			= 1_000_000;
+	public static final int			nsInMs			= 1_000_000;
 
 	/**
 	 * The number of nanoseconds in one second (For conversion purposes).
 	 */
-	public static final int		nsInSec			= 1_000_000_000;
+	public static final int			nsInSec			= 1_000_000_000;
 
 	/**
 	 * The number of expected nanoseconds to render a frame.
 	 */
-	public static final double	nsInTick		= Constants.getNSPerTick((short) 60);
+	public static final double		nsInTick		= Constants.getNSPerTick((short) 60);
 
-	public static final short	windowHeight	= 800;
+	public static final short		windowHeight	= 800;
 
-	public final static short	windowWidth		= 1000;
+	public final static short		windowWidth		= 1000;
 
 	// Static Methods
 

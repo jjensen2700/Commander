@@ -2,11 +2,11 @@ package nick.jgame.world;
 
 import java.util.*;
 
-import nick.jgame.entity.Entity;
 import nick.jgame.gfx.*;
 import nick.jgame.init.Tiles;
+import nick.jgame.opts.Options;
 
-public class Tile implements OffsetRenderable {
+public abstract class Tile implements OffsetRenderable {
 
 	public static final class Material {
 
@@ -31,11 +31,21 @@ public class Tile implements OffsetRenderable {
 		}
 	}
 
+	private static byte							changeLvl;
+
 	private static final HashMap<String, Tile>	registered	= new HashMap<>( );
 
 	private static short						regNum		= 0;
 
 	private static final ArrayList<String>		tileNames	= new ArrayList<>( );
+
+	static {
+		if (!Options.getBoolOption("hypersmoothgen")) {
+			changeLvl = 4;
+		} else {
+			changeLvl = 3;
+		}
+	}
 
 	public static final Tile getAt(final int loc) {
 
@@ -45,6 +55,11 @@ public class Tile implements OffsetRenderable {
 	public static final Tile getAt(final String name) {
 
 		return registered.get(name);
+	}
+
+	protected static final byte getChangeLvl( ) {
+
+		return changeLvl;
 	}
 
 	public static final Tile getRandTile(final Random rand) {
@@ -96,7 +111,7 @@ public class Tile implements OffsetRenderable {
 		return tileMat;
 	}
 
-	public boolean isArable( ) {
+	public final boolean isArable( ) {
 
 		return this == Tiles.grass;
 	}
@@ -106,13 +121,9 @@ public class Tile implements OffsetRenderable {
 		return img == null;
 	}
 
-	public boolean isVisible(final Render rend, final short x, final short y) {
+	public final boolean isVisible(final Render rend, final short x, final short y) {
 
 		return (rend.isVisible(x, y) || rend.isVisible((short) (x + 32), (short) (y + 32)) || rend.isVisible((short) (x + 32), y) || rend.isVisible(x, (short) (y + 32))) && (img != null);
-	}
-
-	public void onCollide(final Entity entity, final short x, final short y) {
-
 	}
 
 	private final void register( ) {

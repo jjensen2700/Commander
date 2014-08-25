@@ -2,7 +2,10 @@ package nick.jgame;
 
 import java.awt.*;
 import java.awt.image.*;
+import java.io.File;
+import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import nick.jgame.gfx.*;
@@ -23,27 +26,54 @@ import nick.jgame.util.math.MathUtil;
 public final class MainGame extends Canvas implements Runnable {
 
 	// Static variables
-	private static final JFrame		frame				= new JFrame( );
+	private static final JFrame				frame				= new JFrame( );
+
+	private static final ArrayList<Image>	icons				= new ArrayList<>( );
 
 	/**
 	 * The Main instance.
 	 */
-	private static final MainGame	inst				= new MainGame( );
+	private static final MainGame			inst				= new MainGame( );
 
 	/**
 	 * The main thread.
 	 */
-	private static Thread			mainLine;
+	private static Thread					mainLine;
 
 	/**
 	 * The boolean that tells if the game is running. Static to prevent multiple instances of this
 	 * game running.
 	 */
-	private static boolean			running				= false;
+	private static boolean					running				= false;
 
-	private static final long		serialVersionUID	= 0xffffffL;
+	private static final long				serialVersionUID	= 0xffffffL;
 
-	private static long				startTime;
+	private static long						startTime;
+	static {
+		final String iconLoc = Constants.assetsLoc + "textures" + File.separator;
+		try {
+			icons.add(ImageIO.read(new File(iconLoc + "new_icon_64x.png")));
+
+		} catch (Exception e) {
+			GameLog.warn(e);
+		}
+		try {
+			icons.add(ImageIO.read(new File(iconLoc + "new_icon_32x.png")));
+
+		} catch (Exception e) {
+			GameLog.warn(e);
+		}
+		try {
+			icons.add(ImageIO.read(new File(iconLoc + "new_icon_16x.png")));
+		} catch (Exception e) {
+			GameLog.warn(e);
+		}
+		try {
+			icons.add(ImageIO.read(new File(iconLoc + "new_icon_8x.png")));
+		} catch (Exception e) {
+			GameLog.warn(e);
+		}
+	}
 
 	// Static methods (Mostly getters)
 	private static void exit(final int code) {
@@ -102,6 +132,7 @@ public final class MainGame extends Canvas implements Runnable {
 		frame.add(MainGame.getInst( ));
 		frame.pack( );
 		frame.setLocationRelativeTo(null);
+		frame.setIconImages(icons);
 
 		MainGame.getInst( ).start( );
 	}

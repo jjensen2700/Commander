@@ -16,7 +16,7 @@ public final class ScreenShotHandler {
 
 	public static void takeScreenShot(final BufferedImage img) {
 
-		if (coolDown != 0) {
+		if (coolDown > 0) {
 			GameLog.info("Need to cooldown for " + coolDown + " more tick(s)!", true);
 			return;
 		}

@@ -1,15 +1,21 @@
 package nick.jgame.world.tiles;
 
-import nick.jgame.gfx.Sprite;
 import nick.jgame.init.*;
 import nick.jgame.world.*;
 import nick.jgame.world.util.WorldUtil;
 
-public final class LiquidTile extends Tile {
+public final class WaterTile extends Tile {
 
-	public LiquidTile(final Sprite s, final String name) {
+	private static final WaterTile	tile	= new WaterTile( );
 
-		super(Materials.liquid, s, true, name);
+	public static WaterTile getInstance( ) {
+
+		return tile;
+	}
+
+	private WaterTile( ) {
+
+		super(Materials.liquid, Sprites.water, true, "water");
 
 	}
 
@@ -25,7 +31,7 @@ public final class LiquidTile extends Tile {
 				touchNonWater++;
 			}
 		}
-		if (touchNonWater >= 3) {
+		if (touchNonWater >= getChangeLvl( )) {
 			w.setTile(Tiles.grass, x, y);
 			return;
 		}

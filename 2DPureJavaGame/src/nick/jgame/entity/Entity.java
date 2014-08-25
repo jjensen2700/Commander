@@ -27,6 +27,11 @@ public abstract class Entity implements Renderable {
 		setLoc(xSpawn, ySpawn);
 	}
 
+	public final byte getHeight( ) {
+
+		return height;
+	}
+
 	public String getSaveText( ) {
 
 		return "loc:" + xLoc + ", " + yLoc;
@@ -42,6 +47,11 @@ public abstract class Entity implements Renderable {
 		return (short) (yLoc / 32);
 	}
 
+	public final byte getWidth( ) {
+
+		return width;
+	}
+
 	public final int getXLoc( ) {
 
 		return xLoc;
@@ -50,48 +60,6 @@ public abstract class Entity implements Renderable {
 	public final int getYLoc( ) {
 
 		return yLoc;
-	}
-
-	protected final boolean isColliding( ) {
-
-		final short tX = getTileXLoc( );
-		final short tY = getTileYLoc( );
-		final int x = getXLoc( );
-		final int y = getYLoc( );
-
-		if (home.getTile((short) ((x - width) / 32), tY).getTileMat( ).isSolid( )) {
-			int xIn = x - width;
-			Tile t = home.getTile((short) (xIn / 32), tY);
-
-			onCollide(t, xIn, y);
-			t.onCollide(this, (short) (xIn / 32), tY);
-			return true;
-		}
-		if (home.getTile((short) ((x + width) / 32), tY).getTileMat( ).isSolid( )) {
-			int xIn = x + width;
-			Tile t = home.getTile((short) (xIn / 32), tY);
-
-			onCollide(t, xIn, y);
-			t.onCollide(this, (short) (xIn / 32), tY);
-			return true;
-		}
-		if (home.getTile(tX, (short) ((y - height) / 32)).getTileMat( ).isSolid( )) {
-			int yIn = y - height;
-			Tile t = home.getTile(tX, (short) (yIn / 32));
-
-			onCollide(t, x, yIn);
-			t.onCollide(this, tX, (short) (yIn / 32));
-			return true;
-		}
-		if (home.getTile(tX, (short) ((y + height) / 32)).getTileMat( ).isSolid( )) {
-			int yIn = y + height;
-			Tile t = home.getTile(tX, (short) (yIn / 32));
-
-			onCollide(t, x, yIn);
-			t.onCollide(this, tX, (short) (yIn / 32));
-			return true;
-		}
-		return false;
 	}
 
 	public final void move(final int x, final int y) {

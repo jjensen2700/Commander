@@ -18,12 +18,15 @@ public final class Options {
 	private static final HashMap<String, Float>		valueOpts	= new HashMap<>( );
 
 	static {
+		// Boolean Options
 		addBoolOption("adaptthreads", true);
 		addBoolOption("bigdebug", false);
 		addBoolOption("debugprinting", true);
 		addBoolOption("quadbuff", false);
 		addBoolOption("debugmode", false);
 		addBoolOption("debugrender", false);
+		addBoolOption("hypersmoothgen", false);
+		// Float Options
 	}
 
 	/**
@@ -57,7 +60,9 @@ public final class Options {
 		} else if (toUse.startsWith("b_")) {
 			toUse = toUse.substring(2);
 		}
-		return boolOpts.get(toUse);
+		final Boolean toRet = boolOpts.get(toUse);
+		if (toRet == null) { return false; }
+		return toRet;
 	}
 
 	public static int getNumOfBoolOpts( ) {
@@ -84,7 +89,9 @@ public final class Options {
 		} else if (toUse.startsWith("v_")) {
 			toUse = toUse.substring(2);
 		}
-		return valueOpts.get(name);
+		final Float toRet = valueOpts.get(name);
+		if (toRet == null) { return 0; }
+		return toRet;
 	}
 
 	public static void loadOptions(final File source) {
