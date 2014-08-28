@@ -10,9 +10,13 @@ import nick.jgame.opts.Options;
 
 public final class GuiOptions extends GuiWithThread {
 
+	private Button			adaptThreads;
+
 	private final int		blue	= 0xff;
 
 	private final Button	exit;
+
+	private boolean			wasChanged;
 
 	private final int		white	= 0xffffff;
 
@@ -20,7 +24,7 @@ public final class GuiOptions extends GuiWithThread {
 
 		super("optMenu");
 		exit = new Button(Constants.getMidWidth( ) - (buttonWidth / 2), Constants.windowHeight - 35, buttonWidth, buttonHeight, white, "Exit", blue, false);
-
+		adaptThreads = new Button(15, 100, buttonWidth + 75, buttonHeight, white, "Adapt Threads:", blue, false);
 	}
 
 	@Override
@@ -40,16 +44,18 @@ public final class GuiOptions extends GuiWithThread {
 	@Override
 	public void render(final Render rend) {
 
+		if (this.wasChanged) {
+			rend.dumpBuffs( );
+			rend.dumpQueuedTxt( );
+			wasChanged = false;
+		}
+		final String title = "Settings";
 		exit.render(rend);
+		adaptThreads.render(rend);
 
-		rend.renderTxt("Settings", white, (short) ((Constants.windowWidth / 2) - 130), (short) 30, false);
+		rend.renderTxt(title, white, Constants.getCenter(title, rend, Render.bigFont), (short) 30, false);
 		rend.renderTxt("Version:" + GameVersion.getVersion( ), white, (short) 0, Constants.windowHeight, true);
-	}
-
-	@Override
-	public void run( ) {
-
-		super.run( );
+		rend.renderTxt(String.valueOf(Options.getBoolOption("adaptthreads")), white, (short) 300, (short) 120, true);
 	}
 
 	@Override
@@ -59,6 +65,10 @@ public final class GuiOptions extends GuiWithThread {
 		if (exit.isClicked( ) || KeyBinding.isDown(Bindings.exit)) {
 
 			MainGame.getInst( ).gotoGui(Guis.mainMenu);
+		} else if (adaptThreads.isClicked( )) {
+			boolean toDo = Options.getBoolOption("adaptThreads");
+			Options.addBoolOption("adaptthreads", !toDo);
+			wasChanged = true;
 		}
 	}
 

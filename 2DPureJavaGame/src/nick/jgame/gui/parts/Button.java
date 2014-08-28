@@ -7,8 +7,6 @@ import nick.jgame.util.render.TxtInfo;
 
 public final class Button extends GuiRectComp {
 
-	private TxtInfo	info;
-
 	private String	txt;
 
 	private int		txtColor, backColor;
@@ -18,12 +16,11 @@ public final class Button extends GuiRectComp {
 
 		super((short) x, (short) y, (short) width, (short) height);
 
-		setTxt(text);
+		setTxt(text.trim( ));
 
 		setBackColor(backColor);
 		setTxtColor(txtColor);
 
-		info = new TxtInfo(text, txtColor, (short) x, (short) (y + Render.getBigFontSize( )), useSmall);
 	}
 
 	public int getBackColor( ) {
@@ -39,6 +36,13 @@ public final class Button extends GuiRectComp {
 	public int getTxtColor( ) {
 
 		return txtColor;
+	}
+
+	public TxtInfo getTxtInfo(final Render rend) {
+
+		short x = (short) ((getX( ) + (getWidth( ) / 2)) - rend.getLineCenter(txt, Render.bigFont));
+		short y = (short) ((getY( ) + (getHeight( ) / 2)) - rend.getLineHeightCenter(txt, Render.bigFont));
+		return new TxtInfo(txt, txtColor, x, y, false);
 	}
 
 	public final boolean isClicked( ) {
@@ -59,7 +63,7 @@ public final class Button extends GuiRectComp {
 				rend.setPixel(backColor, x, y);
 			}
 		}
-		rend.renderTxt(info);
+		rend.renderTxt(getTxtInfo(rend));
 	}
 
 	private void setBackColor(final int backColor) {

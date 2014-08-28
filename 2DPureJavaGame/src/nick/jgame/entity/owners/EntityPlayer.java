@@ -1,15 +1,16 @@
-package nick.jgame.entity;
+package nick.jgame.entity.owners;
 
 import nick.jgame.MainGame;
+import nick.jgame.entity.EntityOwner;
 import nick.jgame.init.Guis;
 import nick.jgame.input.*;
 import nick.jgame.world.World;
 
-public final class EntityPlayer extends EntityOwner {
+public class EntityPlayer extends EntityOwner {
 
-	public EntityPlayer(final World w) {
+	public EntityPlayer(final World w, final String name) {
 
-		super(w);
+		super(w, name);
 	}
 
 	@Override

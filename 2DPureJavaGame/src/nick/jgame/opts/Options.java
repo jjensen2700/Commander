@@ -34,21 +34,27 @@ public final class Options {
 	 *
 	 * @param name
 	 *            The name of the option (lowercase and trimmed)
-	 * @param defaultVal
+	 * @param val
 	 *            The value to start with or set to
 	 */
-	public static void addBoolOption(final String name, final boolean defaultVal) {
+	public static void addBoolOption(final String name, final boolean val) {
 
 		final String toIn = name.toLowerCase( ).trim( );
-		listOpts.add("b_" + toIn);
-		boolOpts.put(toIn, defaultVal);
+		if (!listOpts.contains("b_" + toIn)) {
+			listOpts.add("b_" + toIn);
+		}
+		boolOpts.put(toIn, val);
+		GameLog.info("Option " + toIn + " has been set to " + val, false);
 	}
 
-	public static void addValueOption(final String name, final float defaultVal) {
+	public static void addValueOption(final String name, final float val) {
 
 		final String toIn = name.toLowerCase( ).trim( );
-		listOpts.add("v_" + toIn);
-		valueOpts.put(toIn, defaultVal);
+		if (!listOpts.contains("v_" + toIn)) {
+			listOpts.add("v_" + toIn);
+		}
+		valueOpts.put(toIn, val);
+		GameLog.info("Option " + toIn + " has been set to " + val, false);
 	}
 
 	public static boolean getBoolOption(final String name) {

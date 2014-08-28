@@ -9,12 +9,15 @@ public abstract class EntityOwner extends Entity {
 
 	private float							money;
 
+	private final String					name;
+
 	private final ArrayList<WorldStruct>	owned	= new ArrayList<>( );
 
-	public EntityOwner(final World w) {
+	public EntityOwner(final World w, final String name) {
 
 		super(w, (short) 0, (short) 0, (byte) 0, (byte) 0);
 		this.isStatic = true;
+		this.name = name;
 	}
 
 	public final void addMoney(final float toAdd) {
@@ -45,5 +48,10 @@ public abstract class EntityOwner extends Entity {
 	public final void unown(final WorldStruct struct) {
 
 		this.owned.remove(struct);
+	}
+
+	public String getName( ) {
+
+		return name;
 	}
 }

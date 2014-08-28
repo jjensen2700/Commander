@@ -32,7 +32,7 @@ public abstract class Entity implements Renderable {
 		return height;
 	}
 
-	public String getSaveText( ) {
+	public String getSaveTxt( ) {
 
 		return "loc:" + xLoc + ", " + yLoc;
 	}

@@ -48,6 +48,12 @@ public abstract class GuiWithThread extends GuiHolder implements Runnable {
 	}
 
 	@Override
+	public void open(final String guiName) {
+
+		start(guiName);
+	}
+
+	@Override
 	public void run( ) {
 
 		long lastTime = System.nanoTime( );

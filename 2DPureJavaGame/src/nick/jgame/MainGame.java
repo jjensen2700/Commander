@@ -229,7 +229,7 @@ public final class MainGame extends Canvas implements Runnable {
 		renderer.dumpQueuedTxt( );
 
 		guiOpen = gui;
-
+		guiOpen.open(guiOpen.getName( ));
 		if (!guiOpen.isInit( )) {
 			guiOpen.initGui( );
 		}

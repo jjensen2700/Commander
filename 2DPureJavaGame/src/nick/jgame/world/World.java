@@ -4,10 +4,12 @@ import java.io.File;
 import java.util.*;
 
 import nick.jgame.*;
-import nick.jgame.entity.*;
+import nick.jgame.entity.Entity;
+import nick.jgame.entity.owners.*;
 import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiWithThread;
 import nick.jgame.init.Tiles;
+import nick.jgame.net.packets.Packet02Move;
 import nick.jgame.util.io.FileUtil;
 import nick.jgame.util.math.Perlin;
 import nick.jgame.world.structures.*;
@@ -60,7 +62,7 @@ public final class World extends GuiWithThread {
 		seed = WorldUtil.calcSeed(this);
 
 		rand = new Random(seed);
-		this.spawnIn(new EntityPlayer(this));
+		this.spawnIn(new EntityPlayer(this, "test"));
 	}
 
 	public World(final String name, final File loc) {
@@ -68,7 +70,7 @@ public final class World extends GuiWithThread {
 		this(name, true);
 		saveLoc = loc;
 		load( );
-		this.spawnIn(new EntityPlayer(this));
+		this.spawnIn(new EntityPlayer(this, "test"));
 	}
 
 	@Override
@@ -236,6 +238,27 @@ public final class World extends GuiWithThread {
 		generated = true;
 	}
 
+	public void moveEntity(final Packet02Move packet) {
+
+		for (Entity e : this.entities) {
+			if (e.getSaveTxt( ).equals(packet.getSaveTxt( ))) {
+				e.setLoc(packet.getX( ), packet.getY( ));
+			}
+		}
+	}
+
+	public void removePlayerMP(final String username) {
+
+		for (Entity e : this.entities) {
+			if (e instanceof EntityPlayerMP) {
+				EntityPlayerMP mp = (EntityPlayerMP) e;
+				if (mp.getName( ).equals(username)) {
+					despawn(mp);
+				}
+			}
+		}
+	}
+
 	public void removeStruct(final WorldStruct struct) {
 
 		structs.remove(struct);
@@ -278,6 +301,9 @@ public final class World extends GuiWithThread {
 		}
 
 		for (WorldStruct t : structs) {
+			if (t == null) {
+				break;
+			}
 			t.render(rend);
 		}
 	}
@@ -302,7 +328,7 @@ public final class World extends GuiWithThread {
 		}
 		text.add("entities:");
 		for (Entity e : entities) {
-			text.add(e.getSaveText( ));
+			text.add(e.getSaveTxt( ));
 		}
 		text.add("structs:");
 		for (WorldStruct ws : structs) {
@@ -376,6 +402,9 @@ public final class World extends GuiWithThread {
 		}
 		if ((tenCounter % 2) == 0) {
 			for (WorldStruct t : structs) {
+				if (t == null) {
+					break;
+				}
 				t.update( );
 			}
 		}

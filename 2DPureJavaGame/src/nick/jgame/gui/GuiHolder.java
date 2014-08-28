@@ -38,6 +38,8 @@ public abstract class GuiHolder implements Renderable {
 		return doneInit;
 	}
 
+	public abstract void open(String guiName);
+
 	public abstract void update( );
 
 }

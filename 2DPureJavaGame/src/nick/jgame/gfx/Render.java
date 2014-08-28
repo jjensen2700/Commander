@@ -1,34 +1,31 @@
 package nick.jgame.gfx;
 
 import java.awt.*;
+import java.awt.font.FontRenderContext;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import nick.jgame.MainGame;
 import nick.jgame.util.render.TxtInfo;
 
-public final class Render {
+public final class Render extends FontRenderContext {
 
-	public static final Font	bigFont		= new Font("Courier New", Font.BOLD, 32);
+	public static final Font					bigFont		= new Font("Courier New", Font.BOLD, 32);
 
-	public static final Font	smallFont	= new Font("Courier New", 0, 12);
+	public static final Font					smallFont	= new Font("Courier New", 0, 12);
 
-	public static final int		transColor	= 0x0f00ff;
-
-	public static byte getBigFontSize( ) {
-
-		return (byte) bigFont.getSize( );
-	}
+	public static final int						transColor	= 0x0f00ff;
 
 	private final short							height, width;
 
 	private final int[ ]						pixels;
 
-	private final CopyOnWriteArrayList<TxtInfo>	txtList	= new CopyOnWriteArrayList<>( );
+	private final CopyOnWriteArrayList<TxtInfo>	txtList		= new CopyOnWriteArrayList<>( );
 
-	private short								xOff	= 0, yOff = 0;
+	private short								xOff		= 0, yOff = 0;
 
 	public Render(final short w, final short h) {
 
+		super( );
 		this.width = w;
 		this.height = h;
 		pixels = new int[width * height];
@@ -47,6 +44,21 @@ public final class Render {
 	public short getHeight( ) {
 
 		return height;
+	}
+
+	public int getLineCenter(final String txt, final Font f) {
+
+		return (int) f.getStringBounds(txt, this).getCenterX( );
+	}
+
+	public int getLineHeightCenter(final String txt, final Font f) {
+
+		return (int) f.getStringBounds(txt, this).getCenterY( );
+	}
+
+	public int getLineLength(final String txt, final Font f) {
+
+		return (int) f.getStringBounds(txt, this).getMaxX( );
 	}
 
 	public int getPixel(final int loc) {

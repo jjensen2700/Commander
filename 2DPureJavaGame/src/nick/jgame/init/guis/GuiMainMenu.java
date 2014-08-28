@@ -9,9 +9,11 @@ import nick.jgame.input.*;
 
 public final class GuiMainMenu extends GuiWithThread {
 
-	private final int		blue	= 0x0000ff;
+	private final int		blue			= 0x0000ff;
 
-	private final int		buttonX	= Constants.getMidWidth( ) - (buttonWidth / 2);
+	private int				buttonCoolDown	= 0;
+
+	private final int		buttonX			= Constants.getMidWidth( ) - (buttonWidth / 2);
 
 	private final Button	exit;
 
@@ -19,7 +21,7 @@ public final class GuiMainMenu extends GuiWithThread {
 
 	private final Button	play;
 
-	private final int		white	= 0xffffff;
+	private final int		white			= 0xffffff;
 
 	public GuiMainMenu( ) {
 
@@ -33,7 +35,14 @@ public final class GuiMainMenu extends GuiWithThread {
 	public void initGui( ) {
 
 		finInit( );
+		buttonCoolDown = 200;
+	}
 
+	@Override
+	public void open(final String guiName) {
+
+		super.open(guiName);
+		buttonCoolDown = 10;
 	}
 
 	@Override
@@ -44,7 +53,7 @@ public final class GuiMainMenu extends GuiWithThread {
 		play.render(rend);
 		options.render(rend);
 		// Text Rendering
-		rend.renderTxt(Constants.gameName, white, (short) ((Constants.windowWidth / 2) - 150), (short) 30, false);
+		rend.renderTxt(Constants.gameName, white, Constants.getCenter(Constants.gameName, rend, Render.bigFont), (short) 30, false);
 		rend.renderTxt("Version:" + GameVersion.getVersion( ), white, (short) 0, Constants.windowHeight, true);
 	}
 
@@ -52,6 +61,10 @@ public final class GuiMainMenu extends GuiWithThread {
 	public void update( ) {
 
 		if (MainGame.getCurrentGui( ) != this) { return; }
+		if (buttonCoolDown > 0) {
+			buttonCoolDown--;
+			return;
+		}
 		if (play.isClicked( ) || KeyBinding.isDown(Bindings.confirm)) {
 
 			MainGame.getInst( ).gotoGui(Guis.world);

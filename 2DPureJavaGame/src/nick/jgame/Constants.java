@@ -1,7 +1,9 @@
 package nick.jgame;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.io.File;
+
+import nick.jgame.gfx.Render;
 
 /**
  * A class to store gamewide static unchanging variables and methods.
@@ -24,6 +26,8 @@ public final class Constants {
 	 */
 	public static final String		gameName		= "Commander (Working Title)";
 
+	public static final short		maxPacketLength	= 1024;
+
 	/**
 	 * The number of nanoseconds in one millisecond (For conversion purposes).
 	 */
@@ -44,6 +48,11 @@ public final class Constants {
 	public final static short		windowWidth		= 1000;
 
 	// Static Methods
+
+	public static short getCenter(final String txt, final Render rend, final Font f) {
+
+		return (short) (getMidWidth( ) - rend.getLineCenter(txt, f));
+	}
 
 	/**
 	 * @category Convenience
