@@ -10,8 +10,8 @@ import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiWithThread;
 import nick.jgame.init.Tiles;
 import nick.jgame.net.packets.Packet02Move;
-import nick.jgame.util.io.FileUtil;
 import nick.jgame.util.math.Perlin;
+import nick.jgame.util.render.TxtInfo;
 import nick.jgame.world.structures.*;
 import nick.jgame.world.util.*;
 
@@ -33,7 +33,7 @@ public final class World extends GuiWithThread {
 
 	private ChunkCoords						size;
 
-	private final ArrayList<WorldStruct>	structs		= new ArrayList<>( );
+	private final ArrayList<WorldStruct>	structs		= new ArrayList<>(20);
 
 	private byte							tenCounter	= 0;
 
@@ -69,7 +69,7 @@ public final class World extends GuiWithThread {
 
 		this(name, true);
 		saveLoc = loc;
-		load( );
+		WorldUtil.load(this);
 		this.spawnIn(new EntityPlayer(this, "test"));
 	}
 
@@ -77,7 +77,7 @@ public final class World extends GuiWithThread {
 	public void close(final String guiName) {
 
 		super.close(guiName);
-		save( );
+		WorldUtil.save(this);
 	}
 
 	public void despawn(final Entity e) {
@@ -140,9 +140,19 @@ public final class World extends GuiWithThread {
 		return getChunk(loc.getX( ), loc.getY( ));
 	}
 
-	public int getNumOfStructs( ) {
+	public byte getChunkHeight( ) {
 
-		return this.structs.size( );
+		return size.getY( );
+	}
+
+	public byte getChunkWidth( ) {
+
+		return size.getX( );
+	}
+
+	public ArrayList<Entity> getEntityList( ) {
+
+		return entities;
 	}
 
 	public Random getRand( ) {
@@ -150,9 +160,19 @@ public final class World extends GuiWithThread {
 		return rand;
 	}
 
-	public WorldStruct getStruct(final int index) {
+	public File getSaveFile( ) {
 
-		return this.structs.get(index);
+		return saveLoc;
+	}
+
+	public long getSeed( ) {
+
+		return seed;
+	}
+
+	public ArrayList<WorldStruct> getStructList( ) {
+
+		return structs;
 	}
 
 	public Tile getTile(final short x, final short y) {
@@ -169,12 +189,12 @@ public final class World extends GuiWithThread {
 
 	public int getTileHeight( ) {
 
-		return Chunk.sideLength * size.getY( );
+		return Chunk.sideLength * getChunkHeight( );
 	}
 
 	public int getTileWidth( ) {
 
-		return Chunk.sideLength * size.getX( );
+		return Chunk.sideLength * getChunkWidth( );
 	}
 
 	public String getWorldName( ) {
@@ -190,52 +210,19 @@ public final class World extends GuiWithThread {
 		finInit( );
 	}
 
+	public boolean isGenerated( ) {
+
+		return this.generated;
+	}
+
 	public boolean isOutOfBounds(final short x, final short y) {
 
 		return ((x < 0) || (y < 0) || (x >= getTileWidth( )) || (y >= getTileHeight( )));
 	}
 
-	public void load( ) {
+	public boolean loadsFromFile( ) {
 
-		if (generated) {
-			System.err.println("World " + worldName + " is already generated!");
-			return;
-		}
-		if (!loadFromFile) {
-			System.err.println("World " + worldName + " does not load from a file!");
-			return;
-		}
-		final ArrayList<String> txt = FileUtil.loadTxt(saveLoc);
-
-		for (String now : txt) {
-			String[ ] comp1 = now.split(":");
-
-			if (comp1[0].equals("seed")) {
-				seed = Long.parseLong(comp1[1]);
-				rand = new Random(seed);
-				continue;
-			}
-
-			// Things that need coordinates
-			String[ ] coords = comp1[1].split(",");
-			if (comp1[0].equals("size")) {
-				byte x = Byte.parseByte(coords[0]);
-				byte y = Byte.parseByte(coords[1]);
-				chunks = new Chunk[x][y];
-				continue;
-			}
-			for (short i = 0; i < Tile.getTilesInited( ); i++) {
-				if (comp1[0].equals(Tile.getAt(i))) {
-
-					short x = Short.parseShort(coords[0]);
-					short y = Short.parseShort(coords[1]);
-					setTile(Tile.getAt(i), x, y);
-				}
-
-			}
-		}
-
-		generated = true;
+		return this.loadFromFile;
 	}
 
 	public void moveEntity(final Packet02Move packet) {
@@ -297,44 +284,46 @@ public final class World extends GuiWithThread {
 			tileY = 0;
 		}
 		for (Entity e : entities) {
-			e.render(rend);
+			if (e != null) {
+				e.render(rend);
+			}
 		}
 
 		for (WorldStruct t : structs) {
-			if (t == null) {
-				break;
+			if (t != null) {
+				t.render(rend);
 			}
-			t.render(rend);
+		}
+		renderTxt(rend);
+	}
+
+	private void renderTxt(final Render rend) {
+
+		final String title = "Player List";
+		final short x = (short) ((Constants.windowWidth - rend.getLineLength(title, Render.smallFont)) - 5);
+		final short yStart = (short) rend.getLineHeight(title, Render.smallFont);
+		rend.renderTxt(new TxtInfo(title, 0xffffff, x, yStart, true));
+		for (byte i = 0; i < this.getEntityList( ).size( ); i++) {
+			Entity e = this.getEntityList( ).get(i);
+			if (!(e instanceof EntityPlayer)) {
+				continue;
+			}
+			EntityPlayer ep = (EntityPlayer) e;
+			rend.renderTxt(new TxtInfo(ep.getName( ), 0xffffff, x, (short) (yStart + (Render.smallFont.getSize( ) * (i + 1))), true));
 		}
 	}
 
-	public void save( ) {
+	public void setChunkArray(final byte x, final byte y) {
 
-		if (!loadFromFile) {
-			saveLoc = new File(Constants.assetsLoc + "worlds" + File.separator + seed + ".txt");
-		}
-		final ArrayList<String> text = new ArrayList<>( );
-		text.add("versionWrittenIn:" + GameVersion.getVersion( ));
-		text.add("seed:" + seed);
-		text.add("size:" + chunks.length + "," + chunks[0].length);
-		text.add("----------------------------------------------------");
-		text.add("worldData:");
+		this.chunks = new Chunk[x][y];
+		this.size = new ChunkCoords(x, y);
+		this.fillChunks( );
+	}
 
-		for (short x = 0; x < getTileWidth( ); x++) {
-			for (short y = 0; y < getTileHeight( ); y++) {
-				Tile t = getTile(x, y);
-				text.add(t.getName( ) + ':' + x + ", " + y);
-			}
-		}
-		text.add("entities:");
-		for (Entity e : entities) {
-			text.add(e.getSaveTxt( ));
-		}
-		text.add("structs:");
-		for (WorldStruct ws : structs) {
-			text.add(ws.getSaveText( ));
-		}
-		FileUtil.writeTxt(saveLoc, text);
+	public void setGenerated( ) {
+
+		generated = true;
+
 	}
 
 	private void setNextChunk( ) {
@@ -347,6 +336,19 @@ public final class World extends GuiWithThread {
 		if (toUpdate.getX( ) > 4) {
 			toUpdate.set((byte) 0);
 		}
+
+	}
+
+	public void setSaveLoc(final File f) {
+
+		this.saveLoc = f;
+
+	}
+
+	public void setSeed(final long seed) {
+
+		this.seed = seed;
+		this.rand = new Random(seed);
 
 	}
 

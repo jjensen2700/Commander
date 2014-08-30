@@ -1,6 +1,5 @@
 package nick.jgame.init;
 
-import nick.jgame.init.guis.*;
 import nick.jgame.world.World;
 
 public final class Guis {

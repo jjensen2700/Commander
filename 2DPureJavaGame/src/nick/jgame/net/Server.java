@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 
-import nick.jgame.Constants;
+import nick.jgame.*;
 import nick.jgame.entity.owners.EntityPlayerMP;
-import nick.jgame.init.Guis;
+import nick.jgame.init.*;
 import nick.jgame.net.packets.*;
 import nick.jgame.util.debug.GameLog;
+import nick.jgame.world.Tile;
 
 public final class Server extends Thread {
 
 	private ArrayList<EntityPlayerMP>	connectedPlayers	= new ArrayList<>( );
+
+	private boolean						running;
 
 	private DatagramSocket				socket;
 
@@ -75,6 +78,11 @@ public final class Server extends Thread {
 		return index;
 	}
 
+	public final boolean isRunning( ) {
+
+		return running;
+	}
+
 	private void parsePacket(final byte[ ] data, final Inet4Address address, final short port) {
 
 		final String message = new String(data).trim( );
@@ -86,33 +94,48 @@ public final class Server extends Thread {
 				break;
 			case LOGIN:
 				packet = new Packet00Login(data);
-				System.out.println("[" + address.getHostAddress( ) + ":" + port + "] "
-						+ ((Packet00Login) packet).getUsername( ) + " has connected...");
+				GameLog.info("[" + address.getHostAddress( ) + ":" + port + "] "
+						+ ((Packet00Login) packet).getUsername( ) + " has connected...", false);
 				EntityPlayerMP player = new EntityPlayerMP(Guis.world, ((Packet00Login) packet).getUsername( ), address, port);
-				this.addConnection(player, (Packet00Login) packet);
+				addConnection(player, (Packet00Login) packet);
 				break;
 			case DISCONNECT:
 				packet = new Packet01Disconnect(data);
 				System.out.println("[" + address.getHostAddress( ) + ":" + port + "] "
 						+ ((Packet01Disconnect) packet).getUsername( ) + " has left...");
-				this.removeConnection((Packet01Disconnect) packet);
+				removeConnection((Packet01Disconnect) packet);
 				break;
 			case MOVE:
 				packet = new Packet02Move(data);
 				Guis.world.moveEntity((Packet02Move) packet);
+				break;
+			case TILE:
+				packet = new Packet03Tile(data);
+				parseTilePacket((Packet03Tile) packet);
 		}
+	}
+
+	private void parseTilePacket(final Packet03Tile p) {
+
+		if ((p.getTile( ) != null) || (p.getTile( ) != Tiles.air)) {
+			Tile t = Guis.world.getTile(p.getxLoc( ), p.getyLoc( ));
+			new Packet03Tile(t, p.getxLoc( ), p.getyLoc( )).writeDataToClient(this);
+		}
+
 	}
 
 	public void removeConnection(final Packet01Disconnect packet) {
 
-		this.connectedPlayers.remove(getPlayerMPIndex(packet.getUsername( )));
+		connectedPlayers.remove(getPlayerMPIndex(packet.getUsername( )));
 		packet.writeDataToClient(this);
 	}
 
 	@Override
 	public void run( ) {
 
-		while (true) {
+		if (running) { return; }
+		running = true;
+		while (MainGame.isRunning( )) {
 			final byte[ ] data = new byte[Constants.maxPacketLength];
 			final DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
@@ -122,6 +145,7 @@ public final class Server extends Thread {
 			}
 			parsePacket(packet.getData( ), (Inet4Address) packet.getAddress( ), (short) packet.getPort( ));
 		}
+		running = false;
 	}
 
 	public void sendData(final byte[ ] data, final InetAddress ipAddress, final int port) {

@@ -1,10 +1,9 @@
-package nick.jgame.init.guis;
+package nick.jgame.init;
 
 import nick.jgame.*;
 import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiWithThread;
 import nick.jgame.gui.parts.Button;
-import nick.jgame.init.Guis;
 import nick.jgame.input.*;
 
 public final class GuiMainMenu extends GuiWithThread {
@@ -42,7 +41,7 @@ public final class GuiMainMenu extends GuiWithThread {
 	public void open(final String guiName) {
 
 		super.open(guiName);
-		buttonCoolDown = 10;
+		buttonCoolDown = 5;
 	}
 
 	@Override

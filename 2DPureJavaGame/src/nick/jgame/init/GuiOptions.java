@@ -1,10 +1,9 @@
-package nick.jgame.init.guis;
+package nick.jgame.init;
 
 import nick.jgame.*;
 import nick.jgame.gfx.Render;
 import nick.jgame.gui.GuiWithThread;
 import nick.jgame.gui.parts.Button;
-import nick.jgame.init.Guis;
 import nick.jgame.input.*;
 import nick.jgame.opts.Options;
 

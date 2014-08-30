@@ -57,6 +57,10 @@ public final class Client extends Thread {
 			case MOVE:
 				packet = new Packet02Move(data);
 				Guis.world.moveEntity((Packet02Move) packet);
+				break;
+			case TILE:
+				packet = new Packet03Tile(data);
+				Guis.world.setTile(((Packet03Tile) packet).getTile( ), ((Packet03Tile) packet).getxLoc( ), ((Packet03Tile) packet).getyLoc( ));
 		}
 	}
 

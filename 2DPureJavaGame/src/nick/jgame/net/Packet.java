@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public abstract class Packet {
 
 	public static enum Type {
-		DISCONNECT, INVALID, LOGIN, MOVE, WORLD;
+		DISCONNECT, INVALID, LOGIN, MOVE, TILE;
 
 		private static final ArrayList<Type>	typesList	= new ArrayList<>( );
 		static {
 			typesList.add(0, LOGIN);
 			typesList.add(1, DISCONNECT);
 			typesList.add(2, MOVE);
-			typesList.add(3, WORLD);
+			typesList.add(3, TILE);
 
 		}
 

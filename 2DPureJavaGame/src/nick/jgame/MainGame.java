@@ -3,6 +3,7 @@ package nick.jgame;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.File;
+import java.net.Inet4Address;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -12,6 +13,7 @@ import nick.jgame.gfx.*;
 import nick.jgame.gui.*;
 import nick.jgame.init.Guis;
 import nick.jgame.input.*;
+import nick.jgame.net.Client;
 import nick.jgame.opts.Options;
 import nick.jgame.util.debug.*;
 import nick.jgame.util.math.MathUtil;
@@ -24,6 +26,8 @@ import nick.jgame.util.math.MathUtil;
  */
 
 public final class MainGame extends Canvas implements Runnable {
+
+	private static Client					client;
 
 	// Static variables
 	private static final JFrame				frame				= new JFrame( );
@@ -49,6 +53,7 @@ public final class MainGame extends Canvas implements Runnable {
 	private static final long				serialVersionUID	= 0xffffffL;
 
 	private static long						startTime;
+
 	static {
 		final String iconLoc = Constants.assetsLoc + "textures" + File.separator;
 		try {
@@ -83,6 +88,11 @@ public final class MainGame extends Canvas implements Runnable {
 		frame.dispose( );
 		System.exit(code);
 
+	}
+
+	public static Client getClient( ) {
+
+		return client;
 	}
 
 	public static synchronized GuiHolder getCurrentGui( ) {
@@ -319,6 +329,7 @@ public final class MainGame extends Canvas implements Runnable {
 		double delta = 0;
 
 		GameLog.info("Starting To Run...", false);
+
 		while (running) {
 
 			mainProf.startTiming( );
@@ -375,7 +386,12 @@ public final class MainGame extends Canvas implements Runnable {
 		threadOn( );
 
 		gotoGui(Guis.mainMenu);
-
+		try {
+			client = new Client((Inet4Address) Inet4Address.getLocalHost( ), Constants.port);
+			client.start( );
+		} catch (Exception e) {
+			GameLog.warn(e);
+		}
 		frame.setVisible(true);
 	}
 

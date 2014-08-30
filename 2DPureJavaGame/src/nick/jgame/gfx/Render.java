@@ -51,6 +51,11 @@ public final class Render extends FontRenderContext {
 		return (int) f.getStringBounds(txt, this).getCenterX( );
 	}
 
+	public int getLineHeight(final String txt, final Font f) {
+
+		return (int) f.getStringBounds(txt, this).getHeight( );
+	}
+
 	public int getLineHeightCenter(final String txt, final Font f) {
 
 		return (int) f.getStringBounds(txt, this).getCenterY( );

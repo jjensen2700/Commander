@@ -1,7 +1,9 @@
 package nick.jgame.world;
 
+import nick.jgame.MainGame;
 import nick.jgame.gfx.Render;
 import nick.jgame.init.Tiles;
+import nick.jgame.net.packets.Packet03Tile;
 import nick.jgame.world.util.ChunkCoords;
 
 public final class Chunk {
@@ -63,7 +65,10 @@ public final class Chunk {
 				short tileX = (short) (x + (coords.getX( ) * sideLength));
 				short tileY = (short) (y + (coords.getY( ) * sideLength));
 				final Tile t = getTile(x, y);
-
+				if ((t == Tiles.air) || (t == null)) {
+					Packet03Tile p = new Packet03Tile(t, tileX, tileY);
+					p.writeDataToServer(MainGame.getClient( ));
+				}
 				if (t.doesTick( )) {
 					t.update(w, tileX, tileY);
 
