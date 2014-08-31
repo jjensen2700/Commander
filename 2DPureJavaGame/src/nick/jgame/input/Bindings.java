@@ -8,8 +8,6 @@ public final class Bindings {
 
 	public static final KeyBinding	exit		= new KeyBinding(KeyEvent.VK_ESCAPE, "exit");
 
-	private static final Bindings	inst		= new Bindings( );
-
 	public static final KeyBinding	moveDown	= new KeyBinding(KeyEvent.VK_S, "move_down");
 
 	public static final KeyBinding	moveLeft	= new KeyBinding(KeyEvent.VK_A, "move_left");
@@ -29,11 +27,6 @@ public final class Bindings {
 	public static final KeyBinding	screenshot	= new KeyBinding(KeyEvent.VK_F1, "screenshot");
 
 	public static final KeyBinding	speed		= new KeyBinding(KeyEvent.VK_SHIFT, "speed");
-
-	public static Bindings getInstance( ) {
-
-		return inst;
-	}
 
 	public static boolean isShifting( ) {
 
