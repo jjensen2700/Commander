@@ -2,14 +2,10 @@ package nick.jgame;
 
 import java.awt.*;
 import java.awt.image.*;
-import java.io.File;
 import java.net.Inet4Address;
-import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 
 import nick.jgame.gfx.*;
+import nick.jgame.gfx.Window;
 import nick.jgame.gui.*;
 import nick.jgame.init.Guis;
 import nick.jgame.input.*;
@@ -27,65 +23,37 @@ import nick.jgame.util.math.MathUtil;
 
 public final class MainGame extends Canvas implements Runnable {
 
-	private static Client					client;
-
-	// Static variables
-	private static final JFrame				frame				= new JFrame( );
-
-	private static final ArrayList<Image>	icons				= new ArrayList<>( );
+	private static Client			client;
 
 	/**
 	 * The Main instance.
 	 */
-	private static final MainGame			inst				= new MainGame( );
+	private static final MainGame	inst				= new MainGame( );
 
 	/**
 	 * The main thread.
 	 */
-	private static Thread					mainLine;
+	private static Thread			mainLine;
 
 	/**
 	 * The boolean that tells if the game is running. Static to prevent multiple instances of this
 	 * game running.
 	 */
-	private static boolean					running				= false;
+	private static boolean			running				= false;
 
-	private static final long				serialVersionUID	= 0xffffffL;
+	private static final long		serialVersionUID	= 0xffffffL;
 
-	private static long						startTime;
+	private static long				startTime;
 
-	static {
-		final String iconLoc = Constants.assetsLoc + "textures" + File.separator;
-		try {
-			icons.add(ImageIO.read(new File(iconLoc + "new_icon_64x.png")));
-
-		} catch (Exception e) {
-			GameLog.warn(e);
-		}
-		try {
-			icons.add(ImageIO.read(new File(iconLoc + "new_icon_32x.png")));
-
-		} catch (Exception e) {
-			GameLog.warn(e);
-		}
-		try {
-			icons.add(ImageIO.read(new File(iconLoc + "new_icon_16x.png")));
-		} catch (Exception e) {
-			GameLog.warn(e);
-		}
-		try {
-			icons.add(ImageIO.read(new File(iconLoc + "new_icon_8x.png")));
-		} catch (Exception e) {
-			GameLog.warn(e);
-		}
-	}
+	// Static variables
+	private static final Window		window				= new Window( );
 
 	// Static methods (Mostly getters)
 	private static void exit(final int code) {
 
-		frame.setVisible(false);
+		window.setVisible(false);
 
-		frame.dispose( );
+		window.dispose( );
 		System.exit(code);
 
 	}
@@ -136,13 +104,7 @@ public final class MainGame extends Canvas implements Runnable {
 
 	public static void main(final String[ ] args) {
 
-		frame.setTitle(Constants.getDisplayName( ));
-		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(MainGame.getInst( ));
-		frame.pack( );
-		frame.setLocationRelativeTo(null);
-		frame.setIconImages(icons);
+		window.setup( );
 
 		MainGame.getInst( ).start( );
 	}
@@ -392,7 +354,7 @@ public final class MainGame extends Canvas implements Runnable {
 		} catch (Exception e) {
 			GameLog.warn(e);
 		}
-		frame.setVisible(true);
+		window.setVisible(true);
 	}
 
 	private void threadOn( ) {

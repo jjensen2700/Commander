@@ -17,9 +17,16 @@ import nick.jgame.world.structures.*;
 
 public final class WorldUtil {
 
+	public static float calcDiagMoveCost(final Material m1, final Material m2) {
+
+		final double diagDist = Math.sqrt(2);
+		final float avgCost = (m1.getTerrainCost( ) + m2.getTerrainCost( )) / 2;
+		return (float) (avgCost * diagDist);
+	}
+
 	public static long calcSeed(final World w) {
 
-		return MathUtil.convertToLong(w.getName( )) + (getArea(w));
+		return MathUtil.convertToLong(w.getName( )) + getArea(w);
 	}
 
 	public static int getArea(final World w) {

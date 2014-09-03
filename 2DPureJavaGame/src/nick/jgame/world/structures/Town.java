@@ -13,13 +13,15 @@ public final class Town extends WorldStruct {
 
 	private byte			defenseRating;
 
-	private boolean			isPort		= false;
+	private byte			happyPercent	= 50;
 
-	private short			maxPop		= 5000;
+	private boolean			isPort			= false;
 
-	private short			population	= 1000;
+	private short			maxPop			= 5000;
 
-	private final Types[ ]	types		= new Types[ ] { Types.NONE, Types.NONE };
+	private short			population		= 1000;
+
+	private final Types[ ]	types			= new Types[ ] { Types.NONE, Types.NONE };
 
 	public Town(final World home, final short tileX, final short tileY, final String name) {
 
@@ -97,6 +99,11 @@ public final class Town extends WorldStruct {
 		return (mat != Materials.liquid) && (mat != Materials.border) && (mat != Materials.air);
 	}
 
+	public short getHappyCount( ) {
+
+		return (short) ((happyPercent / 100) * getPop( ));
+	}
+
 	public int getHealth( ) {
 
 		if (population < (defenseRating * 1000)) { return defenseRating * 100; }
@@ -144,6 +151,10 @@ public final class Town extends WorldStruct {
 			population -= getHome( ).getRand( ).nextInt(5);
 		} else if ((population <= 0) && (getHealth( ) <= 0)) {
 			getHome( ).removeStruct(this);
+		}
+
+		if (happyPercent > 100) {
+			happyPercent -= getHome( ).getRand( ).nextInt(5);
 		}
 
 		if (isType(Types.MINING)) {

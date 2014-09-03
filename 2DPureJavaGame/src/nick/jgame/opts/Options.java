@@ -26,6 +26,7 @@ public final class Options {
 		addBoolOption("debugmode", false);
 		addBoolOption("debugrender", false);
 		addBoolOption("hypersmoothgen", false);
+		addBoolOption("runserver", false);
 		// Float Options
 	}
 
