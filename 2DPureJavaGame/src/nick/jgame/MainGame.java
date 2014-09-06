@@ -2,14 +2,12 @@ package nick.jgame;
 
 import java.awt.*;
 import java.awt.image.*;
-import java.net.Inet4Address;
 
 import nick.jgame.gfx.*;
 import nick.jgame.gfx.Window;
 import nick.jgame.gui.*;
 import nick.jgame.init.Guis;
 import nick.jgame.input.*;
-import nick.jgame.net.Client;
 import nick.jgame.opts.Options;
 import nick.jgame.util.debug.*;
 import nick.jgame.util.math.MathUtil;
@@ -23,7 +21,7 @@ import nick.jgame.util.math.MathUtil;
 
 public final class MainGame extends Canvas implements Runnable {
 
-	private static Client			client;
+	// Static variables
 
 	/**
 	 * The Main instance.
@@ -41,26 +39,18 @@ public final class MainGame extends Canvas implements Runnable {
 	 */
 	private static boolean			running				= false;
 
-	private static final long		serialVersionUID	= 0xffffffL;
+	private static final long		serialVersionUID	= 1L;
 
 	private static long				startTime;
-
-	// Static variables
-	private static final Window		window				= new Window( );
 
 	// Static methods (Mostly getters)
 	private static void exit(final int code) {
 
-		window.setVisible(false);
+		Window.getInst( ).setVisible(false);
 
-		window.dispose( );
+		Window.getInst( ).dispose( );
 		System.exit(code);
 
-	}
-
-	public static Client getClient( ) {
-
-		return client;
 	}
 
 	public static synchronized GuiHolder getCurrentGui( ) {
@@ -104,7 +94,7 @@ public final class MainGame extends Canvas implements Runnable {
 
 	public static void main(final String[ ] args) {
 
-		window.setup( );
+		Window.getInst( ).setup( );
 
 		MainGame.getInst( ).start( );
 	}
@@ -168,8 +158,20 @@ public final class MainGame extends Canvas implements Runnable {
 	}
 
 	// Instance methods
-	private void actualRender(final BufferStrategy bs, final Graphics g) {
+	private void actualRender(final BufferStrategy bs) {
 
+		if (bs.contentsLost( )) {
+			renderProf.stopTiming( );
+			return;
+		}
+
+		final Graphics g = bs.getDrawGraphics( );
+
+		if (g == null) {
+
+			renderProf.stopTiming( );
+			return;
+		}
 		g.fillRect(0, 0, Constants.windowWidth, Constants.windowHeight);
 		g.drawImage(img, 0, 0, Constants.windowWidth, Constants.windowHeight, null);
 
@@ -234,7 +236,7 @@ public final class MainGame extends Canvas implements Runnable {
 	}
 
 	// -Running stuff
-	private void render( ) {
+	private void render(final short fps) {
 
 		renderProf.startTiming( );
 		final BufferStrategy bs = getBufferStrategy( );
@@ -251,25 +253,24 @@ public final class MainGame extends Canvas implements Runnable {
 		}
 
 		renderer.dumpBuffs( );
+		renderer.dumpQueuedTxt( );
 		if ((guiOpen == null) || switchingGuis) {
 			renderProf.stopTiming( );
 			return;
 		}
 		guiOpen.render(renderer);
+
+		if (Options.getBoolOption("displayfps")) {
+
+			String txt = "FPS:" + fps;
+			renderer.renderTxt(txt, 0xffffff, (short) 0, (short) renderer.getLineHeight(txt, Render.smallFont), true);
+		}
+
 		for (int loc = 0; loc < pixels.length; loc++) {
 			pixels[loc] = renderer.getPixel(loc);
 		}
-		if (bs.contentsLost( )) {
-			renderProf.stopTiming( );
-			return;
-		}
-		final Graphics g = bs.getDrawGraphics( );
-		if (g == null) {
-			GameLog.warn("The Graphics objects is null!");
-			renderProf.stopTiming( );
-			return;
-		}
-		actualRender(bs, g);
+
+		actualRender(bs);
 
 		renderProf.stopTiming( );
 	}
@@ -288,6 +289,7 @@ public final class MainGame extends Canvas implements Runnable {
 		// Counting variables
 		byte updates = 0;
 		short fps = 0;
+		short lastfps = 0;
 		double delta = 0;
 
 		GameLog.info("Starting To Run...", false);
@@ -306,7 +308,7 @@ public final class MainGame extends Canvas implements Runnable {
 				delta--;
 			}
 
-			render( );
+			render(lastfps);
 			fps++;
 
 			if ((loopTime <= System.currentTimeMillis( ))) {
@@ -320,6 +322,7 @@ public final class MainGame extends Canvas implements Runnable {
 					logMS(totalTime, fps);
 				}
 				// Variable Setting
+				lastfps = fps;
 				fps = 0;
 				updates = 0;
 				loopTime += 1000;
@@ -346,15 +349,11 @@ public final class MainGame extends Canvas implements Runnable {
 		startTime = System.currentTimeMillis( );
 
 		threadOn( );
-
+		NetworkHandler.startClient( );
+		NetworkHandler.startServer( );
 		gotoGui(Guis.mainMenu);
-		try {
-			client = new Client((Inet4Address) Inet4Address.getLocalHost( ), Constants.port);
-			client.start( );
-		} catch (Exception e) {
-			GameLog.warn(e);
-		}
-		window.setVisible(true);
+
+		Window.getInst( ).setVisible(true);
 	}
 
 	private void threadOn( ) {

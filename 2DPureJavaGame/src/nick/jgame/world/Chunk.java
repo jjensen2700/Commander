@@ -1,6 +1,6 @@
 package nick.jgame.world;
 
-import nick.jgame.MainGame;
+import nick.jgame.NetworkHandler;
 import nick.jgame.gfx.Render;
 import nick.jgame.init.Tiles;
 import nick.jgame.net.packets.Packet03Tile;
@@ -67,7 +67,7 @@ public final class Chunk {
 				final Tile t = getTile(x, y);
 				if ((t == Tiles.air) || (t == null)) {
 					Packet03Tile p = new Packet03Tile(t, tileX, tileY);
-					p.writeDataToServer(MainGame.getClient( ));
+					NetworkHandler.sendPacketToServer(p);
 				}
 				if (t.doesTick( )) {
 					t.update(w, tileX, tileY);

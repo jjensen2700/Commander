@@ -14,7 +14,10 @@ public final class Window extends JFrame {
 
 	private static final ArrayList<Image>	icons				= new ArrayList<>( );
 
+	private static final Window				inst				= new Window( );
+
 	private static final long				serialVersionUID	= 1L;
+
 	static {
 		final String iconLoc = Constants.assetsLoc + "textures" + File.separator;
 		try {
@@ -39,6 +42,11 @@ public final class Window extends JFrame {
 		} catch (Exception e) {
 			GameLog.warn(e);
 		}
+	}
+
+	public static Window getInst( ) {
+
+		return inst;
 	}
 
 	public void setup( ) {

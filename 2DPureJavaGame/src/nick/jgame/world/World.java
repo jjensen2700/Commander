@@ -299,18 +299,20 @@ public final class World extends GuiWithThread {
 
 	private void renderTxt(final Render rend) {
 
+		// Rendering the player list
 		final String title = "Player List";
 		final short x = (short) ((Constants.windowWidth - rend.getLineLength(title, Render.smallFont)) - 5);
 		final short yStart = (short) rend.getLineHeight(title, Render.smallFont);
 		rend.renderTxt(new TxtInfo(title, 0xffffff, x, yStart, true));
 		for (byte i = 0; i < this.getEntityList( ).size( ); i++) {
-			Entity e = this.getEntityList( ).get(i);
+			final Entity e = this.getEntityList( ).get(i);
 			if (!(e instanceof EntityPlayer)) {
 				continue;
 			}
-			EntityPlayer ep = (EntityPlayer) e;
-			rend.renderTxt(new TxtInfo(ep.getName( ), 0xffffff, x, (short) (yStart + (Render.smallFont.getSize( ) * (i + 1))), true));
+			final EntityPlayer ep = (EntityPlayer) e;
+			rend.renderTxt(ep.getName( ), 0xffffff, x, (short) (yStart + (Render.smallFont.getSize( ) * (i + 1))), true);
 		}
+
 	}
 
 	public void setChunkArray(final byte x, final byte y) {

@@ -78,7 +78,7 @@ public final class Server extends Thread {
 		return index;
 	}
 
-	public final boolean isRunning( ) {
+	public boolean isRunning( ) {
 
 		return running;
 	}

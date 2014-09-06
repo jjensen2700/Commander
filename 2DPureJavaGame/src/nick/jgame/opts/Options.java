@@ -27,6 +27,7 @@ public final class Options {
 		addBoolOption("debugrender", false);
 		addBoolOption("hypersmoothgen", false);
 		addBoolOption("runserver", false);
+		addBoolOption("displayfps", true);
 		// Float Options
 	}
 
