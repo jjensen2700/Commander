@@ -13,7 +13,7 @@ public final class Town extends WorldStruct {
 
 	private byte			defenseRating;
 
-	private byte			happyPercent	= 50;
+	private float			happyPercent	= 50;
 
 	private boolean			isPort			= false;
 
@@ -132,7 +132,7 @@ public final class Town extends WorldStruct {
 
 	public boolean isType(final Types type) {
 
-		return (types[0] == type) && (types[1] == type);
+		return (types[0] == type) || (types[1] == type);
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public final class Town extends WorldStruct {
 			getHome( ).removeStruct(this);
 		}
 
-		if (happyPercent > 100) {
+		if (happyPercent >= 100) {
 			happyPercent -= getHome( ).getRand( ).nextInt(5);
 		}
 

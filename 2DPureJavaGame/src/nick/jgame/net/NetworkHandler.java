@@ -1,8 +1,8 @@
-package nick.jgame;
+package nick.jgame.net;
 
 import java.net.Inet4Address;
 
-import nick.jgame.net.*;
+import nick.jgame.Constants;
 import nick.jgame.opts.Options;
 import nick.jgame.util.debug.GameLog;
 
@@ -24,12 +24,12 @@ public final class NetworkHandler {
 
 	public static void sendPacketToClient(final Packet p) {
 
-		p.writeDataToClient(server);
+		server.sendDataToAllClients(p.getData( ));
 	}
 
 	public static void sendPacketToServer(final Packet p) {
 
-		p.writeDataToServer(client);
+		client.sendData(p.getData( ));
 	}
 
 	public static void startClient( ) {
@@ -45,9 +45,14 @@ public final class NetworkHandler {
 
 	public static void startServer( ) {
 
-		if (!Options.getBoolOption("runserver") || server.isRunning( )) { return; }
+		if (!Options.getBoolOption("runserver") || ((server != null) && server.isRunning( ))) { return; }
 		server = new Server(Constants.port);
 		server.start( );
+	}
+
+	public static void stopServer( ) {
+
+		server.stopServer( );
 	}
 
 }

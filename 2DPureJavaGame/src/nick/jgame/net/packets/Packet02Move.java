@@ -90,15 +90,15 @@ public final class Packet02Move extends Packet {
 	}
 
 	@Override
-	public void writeDataToClient(final Server s) {
+	public void writeDataToClient( ) {
 
-		s.sendDataToAllClients(getData( ));
+		NetworkHandler.sendPacketToClient(this);
 	}
 
 	@Override
-	public void writeDataToServer(final Client c) {
+	public void writeDataToServer( ) {
 
-		c.sendData(getData( ));
+		NetworkHandler.sendPacketToServer(this);
 	}
 
 }

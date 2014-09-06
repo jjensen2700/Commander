@@ -26,9 +26,10 @@ public final class Options {
 		addBoolOption("debugmode", false);
 		addBoolOption("debugrender", false);
 		addBoolOption("hypersmoothgen", false);
-		addBoolOption("runserver", false);
+		addBoolOption("runserver", true);
 		addBoolOption("displayfps", true);
 		// Float Options
+		addValueOption("minfps", 30);
 	}
 
 	/**
@@ -69,7 +70,10 @@ public final class Options {
 			toUse = toUse.substring(2);
 		}
 		final Boolean toRet = boolOpts.get(toUse);
-		if (toRet == null) { return false; }
+		if (toRet == null) {
+			GameLog.warn("Option " + name + " has not been set!");
+			return false;
+		}
 		return toRet;
 	}
 
@@ -98,7 +102,10 @@ public final class Options {
 			toUse = toUse.substring(2);
 		}
 		final Float toRet = valueOpts.get(name);
-		if (toRet == null) { return 0; }
+		if (toRet == null) {
+			GameLog.warn("Option " + name + " has not been set!");
+			return 0;
+		}
 		return toRet;
 	}
 

@@ -122,8 +122,8 @@ public final class Perlin {
 	public static float[ ][ ] roundNoise(final float[ ][ ] toRound, final byte decimalPlaces) {
 
 		if (decimalPlaces >= 10) { return toRound; }
-		float[ ][ ] toRet = new float[toRound.length][toRound[0].length];
-		float factor = (float) Math.pow(10, decimalPlaces);
+		final float[ ][ ] toRet = new float[toRound.length][toRound[0].length];
+		final float factor = (float) Math.pow(10, decimalPlaces);
 		for (int x = 0; x < toRet.length; x++) {
 			for (int y = 0; y < toRet[0].length; y++) {
 				toRet[x][y] = Math.round(toRound[x][y] * factor) / factor;

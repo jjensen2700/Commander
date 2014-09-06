@@ -14,10 +14,10 @@ public final class FileUtil {
 			return new ArrayList<String>( );
 		}
 
-		try (BufferedReader reader = new BufferedReader(new FileReader(loc));) {
+		try (final BufferedReader reader = new BufferedReader(new FileReader(loc));) {
 
 			String line = null;
-			ArrayList<String> contents = new ArrayList<String>( );
+			final ArrayList<String> contents = new ArrayList<String>( );
 
 			while ((line = reader.readLine( )) != null) {
 				contents.add(line);
@@ -34,7 +34,7 @@ public final class FileUtil {
 	public static void writeTxt(final File loc, final ArrayList<String> txt) {
 
 		txt.trimToSize( );
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(loc));) {
+		try (final BufferedWriter writer = new BufferedWriter(new FileWriter(loc));) {
 			writer.write("Written on " + Calendar.getInstance( ).getTime( ));
 			for (String s : txt) {
 				writer.newLine( );

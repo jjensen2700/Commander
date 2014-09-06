@@ -67,7 +67,7 @@ public final class GameProfiler {
 	public final void stopTiming( ) {
 
 		if (!isTiming) {
-			GameLog.warn("StartTiming was not called before StopTiming!!!");
+			GameLog.warn("StartTiming was not called before StopTiming on instance " + name + "!");
 			return;
 		}
 		isTiming = false;

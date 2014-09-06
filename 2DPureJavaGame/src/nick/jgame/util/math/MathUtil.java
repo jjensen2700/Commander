@@ -1,21 +1,22 @@
 package nick.jgame.util.math;
 
+import nick.jgame.MainGame;
 import nick.jgame.opts.Options;
 
 public final class MathUtil {
 
 	public static String addFrontZero(final short num) {
 
-		if ((num >= 0) && (num < 10)) { return "0" + String.valueOf(num); }
+		if ((num >= 0) && (num < 10)) { return '0' + String.valueOf(num); }
 		return String.valueOf(num);
 	}
 
 	public static long convertToLong(final String toChange) {
 
 		long toRet = 1;
-		byte[ ] chars = toChange.getBytes( );
+		final byte[ ] chars = toChange.getBytes( );
 
-		for (byte num : chars) {
+		for (final byte num : chars) {
 			if ((num * toRet) <= Long.MAX_VALUE) {
 				toRet *= num;
 			} else {
@@ -29,20 +30,15 @@ public final class MathUtil {
 		return toRet;
 	}
 
-	public static int getArrayLoc(final int x, final int y, final int width) {
-
-		return x + (y * width);
-	}
-
 	public static byte getPrefPriority(final int updates, final byte current) {
 
-		return getPrefPriority((short) 60, updates, current);
+		return getPrefPriority(MainGame.getFPS( ), updates, current);
 	}
 
 	public static byte getPrefPriority(final short fps, final int updates, final byte current) {
 
 		if (!Options.getBoolOption("adaptthreads")) { return current; }
-		if ((fps <= 30) && (current < Thread.MAX_PRIORITY)) { return (byte) (current + 1); }
+		if ((fps <= Options.getValueOption("minfps")) && (current < Thread.MAX_PRIORITY)) { return (byte) (current + 1); }
 
 		return current;
 	}

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 
-import nick.jgame.*;
+import nick.jgame.Constants;
 import nick.jgame.entity.owners.EntityPlayerMP;
 import nick.jgame.init.*;
 import nick.jgame.net.packets.*;
@@ -19,7 +19,7 @@ public final class Server extends Thread {
 
 	private DatagramSocket				socket;
 
-	public Server(final short port) {
+	public Server(final int port) {
 
 		try {
 			this.socket = new DatagramSocket(port);
@@ -28,7 +28,7 @@ public final class Server extends Thread {
 		}
 	}
 
-	public void addConnection(final EntityPlayerMP player, Packet00Login packet) {
+	private void addConnection(final EntityPlayerMP player, Packet00Login packet) {
 
 		boolean alreadyConnected = false;
 		for (EntityPlayerMP p : this.connectedPlayers) {
@@ -119,15 +119,15 @@ public final class Server extends Thread {
 
 		if ((p.getTile( ) != null) || (p.getTile( ) != Tiles.air)) {
 			Tile t = Guis.world.getTile(p.getxLoc( ), p.getyLoc( ));
-			new Packet03Tile(t, p.getxLoc( ), p.getyLoc( )).writeDataToClient(this);
+			new Packet03Tile(t, p.getxLoc( ), p.getyLoc( )).writeDataToClient( );
 		}
 
 	}
 
-	public void removeConnection(final Packet01Disconnect packet) {
+	private void removeConnection(final Packet01Disconnect packet) {
 
 		connectedPlayers.remove(getPlayerMPIndex(packet.getUsername( )));
-		packet.writeDataToClient(this);
+		packet.writeDataToClient( );
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public final class Server extends Thread {
 
 		if (running) { return; }
 		running = true;
-		while (MainGame.isRunning( )) {
+		while (running) {
 			final byte[ ] data = new byte[Constants.maxPacketLength];
 			final DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
@@ -145,10 +145,10 @@ public final class Server extends Thread {
 			}
 			parsePacket(packet.getData( ), (Inet4Address) packet.getAddress( ), (short) packet.getPort( ));
 		}
-		running = false;
+
 	}
 
-	public void sendData(final byte[ ] data, final InetAddress ipAddress, final int port) {
+	void sendData(final byte[ ] data, final InetAddress ipAddress, final int port) {
 
 		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, port);
 		try {
@@ -159,10 +159,21 @@ public final class Server extends Thread {
 
 	}
 
-	public void sendDataToAllClients(final byte[ ] data) {
+	void sendDataToAllClients(final byte[ ] data) {
 
 		for (EntityPlayerMP p : connectedPlayers) {
 			sendData(data, p.getIp( ), p.getPort( ));
+		}
+	}
+
+	void stopServer( ) {
+
+		if (!running) { return; }
+		running = false;
+		try {
+			this.join( );
+		} catch (Exception e) {
+			GameLog.warn(e);
 		}
 	}
 }

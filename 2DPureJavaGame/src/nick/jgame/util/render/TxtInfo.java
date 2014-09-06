@@ -6,7 +6,7 @@ public final class TxtInfo {
 
 	private final String	txt;
 
-	private boolean			useSmall;
+	private final boolean	useSmall;
 
 	private final short		x, y;
 
@@ -19,22 +19,22 @@ public final class TxtInfo {
 		this.useSmall = small;
 	}
 
-	public final int getColor( ) {
+	public int getColor( ) {
 
 		return col;
 	}
 
-	public final String getTxt( ) {
+	public String getTxt( ) {
 
 		return txt;
 	}
 
-	public final short getX( ) {
+	public short getX( ) {
 
 		return x;
 	}
 
-	public final short getY( ) {
+	public short getY( ) {
 
 		return y;
 	}

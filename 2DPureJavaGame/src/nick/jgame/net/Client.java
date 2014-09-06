@@ -14,9 +14,9 @@ public final class Client extends Thread {
 
 	private final Inet4Address	ipAt;
 
-	private final short			port;
+	private final int			port;
 
-	public Client(final Inet4Address ip, final short port) {
+	public Client(final Inet4Address ip, final int port) {
 
 		ipAt = ip;
 		this.port = port;
@@ -81,7 +81,7 @@ public final class Client extends Thread {
 		}
 	}
 
-	public void sendData(final byte[ ] data) {
+	void sendData(final byte[ ] data) {
 
 		final DatagramPacket packet = new DatagramPacket(data, data.length, ipAt, port);
 		try {

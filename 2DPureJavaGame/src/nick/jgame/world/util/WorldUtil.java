@@ -230,8 +230,8 @@ public final class WorldUtil {
 
 		for (byte xL = 0; xL < w.getTileWidth( ); xL++) {
 			for (byte yL = 0; yL < w.getTileHeight( ); yL++) {
-				Packet03Tile p = new Packet03Tile(w.getTile(xL, yL), xL, yL);
-				NetworkHandler.sendPacketToClient(p);
+				new Packet03Tile(w.getTile(xL, yL), xL, yL).writeDataToClient( );
+
 			}
 		}
 	}

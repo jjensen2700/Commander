@@ -43,7 +43,7 @@ public final class Constants {
 	 */
 	public static final double		nsInTick		= Constants.getNSPerTick((short) 60);
 
-	public static final short		port			= (short) 35565;
+	public static final int			port			= 35565;
 
 	public static final short		windowHeight	= 800;
 

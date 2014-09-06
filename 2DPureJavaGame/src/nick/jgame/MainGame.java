@@ -8,6 +8,7 @@ import nick.jgame.gfx.Window;
 import nick.jgame.gui.*;
 import nick.jgame.init.Guis;
 import nick.jgame.input.*;
+import nick.jgame.net.NetworkHandler;
 import nick.jgame.opts.Options;
 import nick.jgame.util.debug.*;
 import nick.jgame.util.math.MathUtil;
@@ -56,6 +57,11 @@ public final class MainGame extends Canvas implements Runnable {
 	public static synchronized GuiHolder getCurrentGui( ) {
 
 		return getInst( ).guiOpen;
+	}
+
+	public static short getFPS( ) {
+
+		return getInst( ).lastfps;
 	}
 
 	/**
@@ -130,6 +136,8 @@ public final class MainGame extends Canvas implements Runnable {
 
 	private final BufferedImage	img				= new BufferedImage(Constants.windowWidth, Constants.windowHeight, BufferedImage.TYPE_INT_RGB);
 
+	private short				lastfps			= 0;
+
 	private final GameProfiler	mainProf		= new GameProfiler("Main");
 
 	private final int[ ]		pixels			= ((DataBufferInt) img.getRaster( ).getDataBuffer( )).getData( );
@@ -159,11 +167,6 @@ public final class MainGame extends Canvas implements Runnable {
 
 	// Instance methods
 	private void actualRender(final BufferStrategy bs) {
-
-		if (bs.contentsLost( )) {
-			renderProf.stopTiming( );
-			return;
-		}
 
 		final Graphics g = bs.getDrawGraphics( );
 
@@ -289,7 +292,7 @@ public final class MainGame extends Canvas implements Runnable {
 		// Counting variables
 		byte updates = 0;
 		short fps = 0;
-		short lastfps = 0;
+
 		double delta = 0;
 
 		GameLog.info("Starting To Run...", false);

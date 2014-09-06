@@ -46,8 +46,8 @@ public abstract class Packet {
 		return message.split("|")[1];
 	}
 
-	public abstract void writeDataToClient(Server s);
+	public abstract void writeDataToClient( );
 
-	public abstract void writeDataToServer(Client c);
+	public abstract void writeDataToServer( );
 
 }
