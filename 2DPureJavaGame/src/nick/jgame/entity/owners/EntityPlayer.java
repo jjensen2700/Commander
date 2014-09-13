@@ -18,7 +18,7 @@ public class EntityPlayer extends EntityOwner {
 
 		if (KeyBinding.isDown(Bindings.exit)) {
 
-			MainGame.getInst( ).gotoGui(Guis.mainMenu);
+			MainGame.gotoGui(Guis.mainMenu);
 
 		}
 		byte speed = 1;
@@ -28,23 +28,23 @@ public class EntityPlayer extends EntityOwner {
 
 		if (KeyBinding.isDown(Bindings.moveUp)) {
 
-			MainGame.getRend( ).moveOffsets((short) 0, (short) (-speed));
+			MainGame.moveOffsets((short) 0, (short) (-speed));
 
 		}
 		if (KeyBinding.isDown(Bindings.moveDown)) {
 
-			MainGame.getRend( ).moveOffsets((short) 0, speed);
+			MainGame.moveOffsets((short) 0, speed);
 
 		}
 
 		if (KeyBinding.isDown(Bindings.moveLeft)) {
 
-			MainGame.getRend( ).moveOffsets((short) -speed, (short) 0);
+			MainGame.moveOffsets((short) -speed, (short) 0);
 
 		}
 		if (KeyBinding.isDown(Bindings.moveRight)) {
 
-			MainGame.getRend( ).moveOffsets(speed, (short) 0);
+			MainGame.moveOffsets(speed, (short) 0);
 
 		}
 	}

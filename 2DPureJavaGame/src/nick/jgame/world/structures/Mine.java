@@ -1,5 +1,7 @@
 package nick.jgame.world.structures;
 
+import java.util.ArrayList;
+
 import nick.jgame.gfx.Render;
 import nick.jgame.init.Materials;
 import nick.jgame.world.World;
@@ -87,6 +89,16 @@ public final class Mine extends WorldStruct implements IMoneyMaker, IUpkeep {
 
 		if (!isProducing) { return 0; }
 		return (byte) (MineQuality.getMultiplier(quality) * MineType.getWorth(type));
+	}
+
+	@Override
+	public ArrayList<String> getSaveTxt( ) {
+
+		ArrayList<String> toRet = super.getSaveTxt( );
+		toRet.add("type:" + type.toString( ));
+		toRet.add("quality:" + quality.toString( ));
+		toRet.add("quantity:" + type.toString( ));
+		return toRet;
 	}
 
 	@Override

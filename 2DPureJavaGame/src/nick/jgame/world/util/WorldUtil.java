@@ -205,7 +205,7 @@ public final class WorldUtil {
 		final ArrayList<String> text = new ArrayList<>( );
 		text.add("versionWrittenIn:" + GameVersion.getVersion( ));
 		text.add("seed:" + seed);
-		text.add("size:" + w.getChunkWidth( ) + "," + w.getChunkHeight( ));
+		text.add("sizeInChunks:" + w.getChunkWidth( ) + "," + w.getChunkHeight( ));
 		text.add("----------------------------------------------------");
 		text.add("worldData:");
 
@@ -216,13 +216,11 @@ public final class WorldUtil {
 			}
 		}
 		text.add("entities:");
+		text.add("{");
 		for (Entity e : w.getEntityList( )) {
-			text.add(e.getSaveTxt( ));
+			text.addAll(e.getSaveTxt( ));
 		}
-		text.add("structs:");
-		for (WorldStruct ws : w.getStructList( )) {
-			text.add(ws.getSaveText( ));
-		}
+		text.add("}");
 		FileUtil.writeTxt(w.getSaveFile( ), text);
 	}
 

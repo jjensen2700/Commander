@@ -9,19 +9,19 @@ import nick.jgame.util.render.TxtInfo;
 
 public final class Render extends FontRenderContext {
 
-	public static final Font					bigFont		= new Font("Courier New", Font.BOLD, 32);
+	public static final Font							bigFont		= new Font("Courier New", Font.BOLD, 32);
 
-	public static final Font					smallFont	= new Font("Courier New", 0, 12);
+	public static final Font							smallFont	= new Font("Courier New", 0, 12);
 
-	public static final int						transColor	= 0x0f00ff;
+	public static final int								transColor	= 0x0f00ff;
 
-	private final short							height, width;
+	private static final CopyOnWriteArrayList<TxtInfo>	txtList		= new CopyOnWriteArrayList<>( );
 
-	private final int[ ]						pixels;
+	private static short								xOff		= 0, yOff = 0;
 
-	private final CopyOnWriteArrayList<TxtInfo>	txtList		= new CopyOnWriteArrayList<>( );
+	private final short									height, width;
 
-	private short								xOff		= 0, yOff = 0;
+	private final int[ ]								pixels;
 
 	public Render(final short w, final short h) {
 
@@ -109,11 +109,15 @@ public final class Render extends FontRenderContext {
 	public void renderQueuedTxt(final Graphics g) {
 
 		for (TxtInfo info : txtList) {
-			if ((info == null) || MainGame.getInst( ).isSwitchingGuis( )) { return; }
-			g.setFont(bigFont);
+
+			if ((info == null) || MainGame.isSwitchingGuis( )) { return; }
+
 			g.setColor(new Color(info.getColor( ), false));
+
 			if (info.useSmallFont( )) {
 				g.setFont(smallFont);
+			} else {
+				g.setFont(bigFont);
 			}
 			g.drawString(info.getTxt( ), info.getX( ), info.getY( ));
 		}

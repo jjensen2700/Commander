@@ -1,5 +1,7 @@
 package nick.jgame.world.structures;
 
+import java.util.ArrayList;
+
 import nick.jgame.gfx.Render;
 import nick.jgame.init.*;
 import nick.jgame.world.*;
@@ -113,6 +115,17 @@ public final class Town extends WorldStruct {
 	public short getPop( ) {
 
 		return population;
+	}
+
+	@Override
+	public ArrayList<String> getSaveTxt( ) {
+
+		ArrayList<String> toRet = super.getSaveTxt( );
+
+		toRet.add("pop:" + population);
+		toRet.add("defense:" + defenseRating);
+		toRet.add("happy:" + happyPercent);
+		return toRet;
 	}
 
 	public Types[ ] getType( ) {

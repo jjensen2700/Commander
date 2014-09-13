@@ -66,11 +66,11 @@ public final class GuiMainMenu extends GuiWithThread {
 		}
 		if (play.isClicked( ) || KeyBinding.isDown(Bindings.confirm)) {
 
-			MainGame.getInst( ).gotoGui(Guis.world);
+			MainGame.gotoGui(Guis.world);
 
 		} else if (options.isClicked( )) {
 
-			MainGame.getInst( ).gotoGui(Guis.optionsMenu);
+			MainGame.gotoGui(Guis.optionsMenu);
 
 		} else if (exit.isClicked( ) || KeyBinding.isDown(Bindings.exit)) {
 

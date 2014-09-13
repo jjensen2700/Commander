@@ -35,7 +35,7 @@ public abstract class EntityOwner extends Entity {
 	public final void addToOwned(final WorldStruct struct) {
 
 		this.owned.add(struct);
-		calcAvgHappyness( );
+
 	}
 
 	private void calcAvgHappyness( ) {
@@ -70,6 +70,20 @@ public abstract class EntityOwner extends Entity {
 		return owned;
 	}
 
+	@Override
+	public ArrayList<String> getSaveTxt( ) {
+
+		ArrayList<String> toRet = super.getSaveTxt( );
+		toRet.add("name:" + name);
+		toRet.add("{");
+		toRet.add("money:" + money);
+		for (WorldStruct s : owned) {
+			toRet.addAll(s.getSaveTxt( ));
+		}
+		toRet.add("}");
+		return toRet;
+	}
+
 	public final float getSubjugHappy( ) {
 
 		return subjugHappy;
@@ -78,5 +92,12 @@ public abstract class EntityOwner extends Entity {
 	public final void unown(final WorldStruct struct) {
 
 		this.owned.remove(struct);
+	}
+
+	@Override
+	public void update( ) {
+
+		super.update( );
+		calcAvgHappyness( );
 	}
 }

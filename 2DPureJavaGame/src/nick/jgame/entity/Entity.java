@@ -1,5 +1,7 @@
 package nick.jgame.entity;
 
+import java.util.ArrayList;
+
 import nick.jgame.gfx.*;
 import nick.jgame.world.*;
 
@@ -32,9 +34,11 @@ public abstract class Entity implements Renderable {
 		return height;
 	}
 
-	public String getSaveTxt( ) {
+	public ArrayList<String> getSaveTxt( ) {
 
-		return "loc:" + xLoc + ", " + yLoc;
+		ArrayList<String> toRet = new ArrayList<>( );
+		toRet.add("loc:" + xLoc + ", " + yLoc);
+		return toRet;
 	}
 
 	public final short getTileXLoc( ) {

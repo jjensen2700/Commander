@@ -63,7 +63,7 @@ public final class GuiOptions extends GuiWithThread {
 		if (MainGame.getCurrentGui( ) != this) { return; }
 		if (exit.isClicked( ) || KeyBinding.isDown(Bindings.exit)) {
 
-			MainGame.getInst( ).gotoGui(Guis.mainMenu);
+			MainGame.gotoGui(Guis.mainMenu);
 		} else if (adaptThreads.isClicked( )) {
 			boolean toDo = Options.getBoolOption("adaptThreads");
 			Options.addBoolOption("adaptthreads", !toDo);

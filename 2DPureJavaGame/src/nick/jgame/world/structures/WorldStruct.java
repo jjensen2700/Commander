@@ -1,5 +1,7 @@
 package nick.jgame.world.structures;
 
+import java.util.ArrayList;
+
 import nick.jgame.entity.EntityOwner;
 import nick.jgame.gfx.Renderable;
 import nick.jgame.world.World;
@@ -46,9 +48,11 @@ public abstract class WorldStruct implements Renderable {
 		return owner;
 	}
 
-	public String getSaveText( ) {
+	public ArrayList<String> getSaveTxt( ) {
 
-		return "loc:" + xLoc + ", " + yLoc;
+		ArrayList<String> toRet = new ArrayList<>( );
+		toRet.add("loc:" + xLoc + "," + yLoc);
+		return toRet;
 	}
 
 	public Status getStatus( ) {
