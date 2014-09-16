@@ -361,7 +361,7 @@ public final class MainGame extends Canvas implements Runnable {
 
 				final byte newPri = MathUtil.getPrefPriority(fps, updates, (byte) mainLine.getPriority( ));
 
-				GameLog.info("FPS: " + fps + " | Game Ticks: " + updates + " | Main Thread Lvl: " + mainLine.getPriority( ), true);
+				GameLog.info("FPS: " + fps + " | Main Thread Lvl: " + mainLine.getPriority( ), true);
 				// Logging ms.
 				if (Options.getBoolOption("bigdebug")) {
 					logMS(totalTime, fps);

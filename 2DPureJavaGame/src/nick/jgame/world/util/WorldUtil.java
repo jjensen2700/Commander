@@ -4,10 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 
 import nick.jgame.*;
-import nick.jgame.entity.Entity;
+import nick.jgame.entity.*;
 import nick.jgame.init.Tiles;
 import nick.jgame.net.Server;
 import nick.jgame.net.packets.Packet03Tile;
+import nick.jgame.util.TxtUtil;
 import nick.jgame.util.debug.GameLog;
 import nick.jgame.util.io.FileUtil;
 import nick.jgame.util.math.MathUtil;
@@ -129,13 +130,13 @@ public final class WorldUtil {
 			return;
 		}
 		final ArrayList<String> txt = FileUtil.loadTxt(w.getSaveFile( ));
-
+		txt.trimToSize( );
+		int loc = 0;
 		for (String now : txt) {
 			String[ ] comp1 = now.split(":");
 
 			if (comp1[0].equals("seed")) {
 				w.setSeed(Long.parseLong(comp1[1]));
-
 				continue;
 			}
 
@@ -147,18 +148,79 @@ public final class WorldUtil {
 				w.setChunkArray(x, y);
 				continue;
 			}
-			for (short i = 0; i < Tile.getTilesInited( ); i++) {
-				if (comp1[0].equals(Tile.getAt(i))) {
+			if (!comp1[0].equals("entities:")) {
+				for (short i = 0; i < Tile.getTilesInited( ); i++) {
+					if (comp1[0].equals(Tile.getAt(i))) {
 
-					short x = Short.parseShort(coords[0]);
-					short y = Short.parseShort(coords[1]);
-					w.setTile(Tile.getAt(i), x, y);
+						short x = Short.parseShort(coords[0]);
+						short y = Short.parseShort(coords[1]);
+						w.setTile(Tile.getAt(i), x, y);
+					}
+
 				}
-
+			} else {
+				parseEntities(w, txt, loc);
 			}
+			loc++;
 		}
 
 		w.setGenerated( );
+	}
+
+	private static void parseEntities(final World w, final ArrayList<String> txt, final int loc) {
+
+		ArrayList<String> locTxt = new ArrayList<>( );
+		for (int i = loc; i < txt.size( ); i++) {
+			locTxt.add(txt.get(i));
+		}
+		EnumEntityType enumtype = EnumEntityType.INVALID;
+		short xParse = 0, yParse = 0;
+		String nameParse = null;
+		float money = 0;
+		byte lvl = 0, lastLvl = -1;
+		for (String now : locTxt) {
+			if (now.contains("{")) {
+				lastLvl = lvl;
+				lvl++;
+			} else if (now.contains("}")) {
+				lastLvl = lvl;
+				lvl--;
+			}
+
+			if (now.startsWith("new")) {
+				String type = now.substring(3).trim( ).toLowerCase( );
+				enumtype = EnumEntityType.getType(type);
+				continue;
+			}
+			String[ ] comp = now.split(":");
+			if (comp[0].equalsIgnoreCase("loc")) {
+				String[ ] coords = comp[1].split(",");
+				xParse = Short.parseShort(coords[0]);
+				yParse = Short.parseShort(coords[1]);
+				continue;
+			} else if (comp[0].equalsIgnoreCase("name")) {
+				nameParse = comp[1];
+				continue;
+			} else if (comp[0].equalsIgnoreCase("owner") && (enumtype != EnumEntityType.OWNER)) {
+				GameLog.warn("Entity parsing is either broken or was not saved correctly!");
+				continue;
+			} else if (comp[0].equalsIgnoreCase("money")) {
+				money = Float.parseFloat(comp[1]);
+				continue;
+			}
+			if ((lvl == 0) && (lastLvl > 0)) {
+				if (enumtype == EnumEntityType.OWNER) {
+					w.spawnIn(EntityOwner.parseOwner(w, nameParse, money));
+				} else {
+					w.spawnIn(Entity.formEntity(w, enumtype, nameParse, xParse, yParse));
+				}
+				enumtype = EnumEntityType.INVALID;
+				xParse = 0;
+				yParse = 0;
+				nameParse = "";
+				money = 0;
+			}
+		}
 	}
 
 	public static void parsePerlinToTiles(final World w, final float[ ][ ] perlin,
@@ -198,16 +260,20 @@ public final class WorldUtil {
 
 	public static void save(final World w) {
 
+		final String horzBreak = "----------------------------------------------------";
 		final long seed = w.getSeed( );
+
 		if (!w.loadsFromFile( )) {
 			w.setSaveLoc(new File(Constants.assetsLoc + "worlds" + File.separator + seed + ".txt"));
 		}
+
 		final ArrayList<String> text = new ArrayList<>( );
+
 		text.add("versionWrittenIn:" + GameVersion.getVersion( ));
 		text.add("seed:" + seed);
 		text.add("sizeInChunks:" + w.getChunkWidth( ) + "," + w.getChunkHeight( ));
-		text.add("----------------------------------------------------");
-		text.add("worldData:");
+		text.add(horzBreak);
+		text.add("worldData:{");
 
 		for (short x = 0; x < w.getTileWidth( ); x++) {
 			for (short y = 0; y < w.getTileHeight( ); y++) {
@@ -215,13 +281,17 @@ public final class WorldUtil {
 				text.add(t.getName( ) + ':' + x + ", " + y);
 			}
 		}
-		text.add("entities:");
-		text.add("{");
-		for (Entity e : w.getEntityList( )) {
-			text.addAll(e.getSaveTxt( ));
-		}
 		text.add("}");
-		FileUtil.writeTxt(w.getSaveFile( ), text);
+		text.add(horzBreak);
+		text.add("entities:");
+
+		for (Entity e : w.getEntityList( )) {
+			text.add("{");
+			text.addAll(e.getSaveTxt( ));
+			text.add("}");
+		}
+
+		FileUtil.writeTxt(w.getSaveFile( ), TxtUtil.formatToSave(text));
 	}
 
 	public static void sendWorldData(final World w, final Server s) {

@@ -51,6 +51,7 @@ public abstract class WorldStruct implements Renderable {
 	public ArrayList<String> getSaveTxt( ) {
 
 		ArrayList<String> toRet = new ArrayList<>( );
+		toRet.add("struct_" + name + ":{");
 		toRet.add("loc:" + xLoc + "," + yLoc);
 		return toRet;
 	}

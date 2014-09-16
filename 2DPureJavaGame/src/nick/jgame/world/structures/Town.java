@@ -125,6 +125,7 @@ public final class Town extends WorldStruct {
 		toRet.add("pop:" + population);
 		toRet.add("defense:" + defenseRating);
 		toRet.add("happy:" + happyPercent);
+		toRet.add("}");
 		return toRet;
 	}
 

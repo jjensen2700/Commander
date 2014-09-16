@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import nick.jgame.world.World;
 import nick.jgame.world.structures.*;
 
-public abstract class EntityOwner extends Entity {
+public class EntityOwner extends Entity {
+
+	public static EntityOwner parseOwner(final World w, final String nameParse, final float money) {
+
+		EntityOwner toRet = new EntityOwner(w, nameParse);
+		toRet.addMoney(money);
+		return toRet;
+	}
 
 	private float							money;
-
-	private final String					name;
 
 	private final ArrayList<WorldStruct>	owned	= new ArrayList<>( );
 
@@ -17,9 +22,9 @@ public abstract class EntityOwner extends Entity {
 
 	public EntityOwner(final World w, final String name) {
 
-		super(w, (short) 0, (short) 0, (byte) 0, (byte) 0);
+		super(w, EnumEntityType.OWNER, name, (short) 0, (short) 0, (byte) 0, (byte) 0);
 		this.isStatic = true;
-		this.name = name;
+
 	}
 
 	public final void addMoney(final float toAdd) {
@@ -60,11 +65,6 @@ public abstract class EntityOwner extends Entity {
 		return money;
 	}
 
-	public final String getName( ) {
-
-		return name;
-	}
-
 	public final ArrayList<WorldStruct> getOwned( ) {
 
 		return owned;
@@ -74,8 +74,8 @@ public abstract class EntityOwner extends Entity {
 	public ArrayList<String> getSaveTxt( ) {
 
 		ArrayList<String> toRet = super.getSaveTxt( );
-		toRet.add("name:" + name);
-		toRet.add("{");
+
+		toRet.add("owner:{");
 		toRet.add("money:" + money);
 		for (WorldStruct s : owned) {
 			toRet.addAll(s.getSaveTxt( ));

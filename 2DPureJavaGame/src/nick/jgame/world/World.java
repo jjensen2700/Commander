@@ -97,9 +97,19 @@ public final class World extends GuiWithThread {
 
 	private void fillStructList( ) {
 
+		EntityPlayer play = null;
+		for (Entity e : entities) {
+			if (e instanceof EntityPlayer) {
+				play = (EntityPlayer) e;
+
+			}
+		}
+		if (play == null) { return; }
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 5; y++) {
-				structs.add(new Town(this, (short) (x * 32), (short) (y * 32), "test"));
+				Town t = new Town(this, (short) (x * 32), (short) (y * 32), "test_" + x + ',' + y);
+				structs.add(t);
+				play.addToOwned(t);
 			}
 		}
 
@@ -392,7 +402,10 @@ public final class World extends GuiWithThread {
 			}
 			firstUpdate = false;
 		}
+		for (Entity e : entities) {
+			e.update( );
 
+		}
 		if ((tenCounter % 5) == 0) {
 
 			getChunk(toUpdate).update(this);
@@ -400,10 +413,6 @@ public final class World extends GuiWithThread {
 			setNextChunk( );
 		}
 
-		for (Entity e : entities) {
-			e.update( );
-
-		}
 		if ((tenCounter % 2) == 0) {
 			for (WorldStruct t : structs) {
 				if (t == null) {

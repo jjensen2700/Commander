@@ -98,6 +98,7 @@ public final class Mine extends WorldStruct implements IMoneyMaker, IUpkeep {
 		toRet.add("type:" + type.toString( ));
 		toRet.add("quality:" + quality.toString( ));
 		toRet.add("quantity:" + type.toString( ));
+		toRet.add("}");
 		return toRet;
 	}
 
