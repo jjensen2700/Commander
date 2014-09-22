@@ -5,9 +5,10 @@ public enum EnumEntityType {
 
 	public static EnumEntityType getType(final String type) {
 
-		if (type.equalsIgnoreCase("entity")) {
-			return ENTITY;
-		} else if (type.equalsIgnoreCase("owner")) { return OWNER; }
+		for (EnumEntityType e : EnumEntityType.values( )) {
+			if (e.toString( ).equalsIgnoreCase(type)) { return e; }
+		}
+
 		return INVALID;
 	}
 

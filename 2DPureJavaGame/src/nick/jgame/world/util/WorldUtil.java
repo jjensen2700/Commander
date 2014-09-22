@@ -8,7 +8,6 @@ import nick.jgame.entity.*;
 import nick.jgame.init.Tiles;
 import nick.jgame.net.Server;
 import nick.jgame.net.packets.Packet03Tile;
-import nick.jgame.util.TxtUtil;
 import nick.jgame.util.debug.GameLog;
 import nick.jgame.util.io.FileUtil;
 import nick.jgame.util.math.MathUtil;
@@ -291,7 +290,7 @@ public final class WorldUtil {
 			text.add("}");
 		}
 
-		FileUtil.writeTxt(w.getSaveFile( ), TxtUtil.formatToSave(text));
+		FileUtil.writeTxt(w.getSaveFile( ), FileUtil.formatToSave(text));
 	}
 
 	public static void sendWorldData(final World w, final Server s) {

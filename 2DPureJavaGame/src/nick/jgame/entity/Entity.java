@@ -3,6 +3,7 @@ package nick.jgame.entity;
 import java.util.ArrayList;
 
 import nick.jgame.gfx.*;
+import nick.jgame.util.math.Vec2i;
 import nick.jgame.world.*;
 
 public class Entity implements Renderable {
@@ -21,15 +22,13 @@ public class Entity implements Renderable {
 
 	protected boolean		isStatic;
 
+	private Vec2i			loc;
+
 	private String			name;
 
 	private EnumEntityType	type;
 
 	private byte			width;
-
-	private short			xLoc;
-
-	private short			yLoc;
 
 	public Entity(final World w, final EnumEntityType type, final String name, final short xSpawn, final short ySpawn,
 			final byte wide,
@@ -58,18 +57,18 @@ public class Entity implements Renderable {
 		ArrayList<String> toRet = new ArrayList<>( );
 		toRet.add("new " + type.name( ));
 		toRet.add("name:" + name);
-		toRet.add("loc:" + xLoc + "," + yLoc);
+		toRet.add("loc:" + loc.toString( ));
 		return toRet;
 	}
 
 	public final short getTileXLoc( ) {
 
-		return (short) (xLoc / 32);
+		return (short) (loc.getX( ) / 32);
 	}
 
 	public final short getTileYLoc( ) {
 
-		return (short) (yLoc / 32);
+		return (short) (loc.getY( ) / 32);
 	}
 
 	public final EnumEntityType getType( ) {
@@ -84,19 +83,18 @@ public class Entity implements Renderable {
 
 	public final int getXLoc( ) {
 
-		return xLoc;
+		return loc.getX( );
 	}
 
 	public final int getYLoc( ) {
 
-		return yLoc;
+		return loc.getY( );
 	}
 
 	public final void move(final int x, final int y) {
 
 		if (isStatic) { return; }
-		xLoc += x;
-		yLoc += y;
+		loc.add(new Vec2i(x, y));
 
 	}
 
@@ -108,14 +106,13 @@ public class Entity implements Renderable {
 	public void render(final Render rend) {
 
 		if (img != null) {
-			img.render(rend, (short) (xLoc + rend.getxOff( )), (short) (yLoc + rend.getyOff( )));
+			img.render(rend, (short) (loc.getX( ) + rend.getxOff( )), (short) (loc.getY( ) + rend.getyOff( )));
 		}
 	}
 
 	public final void setLoc(final short x, final short y) {
 
-		setxLoc(x);
-		setyLoc(y);
+		loc.set(x, y);
 	}
 
 	public void setName(final String name) {
@@ -130,12 +127,14 @@ public class Entity implements Renderable {
 
 	public final void setxLoc(final short x) {
 
-		xLoc = x;
+		loc.setX(x);
+
 	}
 
 	public final void setyLoc(final short y) {
 
-		yLoc = y;
+		loc.setY(y);
+
 	}
 
 	public void update( ) {

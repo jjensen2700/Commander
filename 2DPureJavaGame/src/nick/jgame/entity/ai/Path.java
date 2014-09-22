@@ -2,14 +2,14 @@ package nick.jgame.entity.ai;
 
 import java.util.ArrayList;
 
-import nick.jgame.util.math.Vec2f;
+import nick.jgame.util.math.Vec2i;
 import nick.jgame.world.World;
 
 public final class Path {
 
 	private final boolean			crossWater, terrainCost;
 
-	private final Vec2f				distance;
+	private final Vec2i				distance;
 
 	private final ArrayList<Node>	nodeList	= new ArrayList<>( );
 
@@ -17,11 +17,11 @@ public final class Path {
 
 	private final ArrayList<Node>	posNodes	= new ArrayList<>( );
 
-	private final Vec2f				start, end;
+	private final Vec2i				start, end;
 
 	private World					world;
 
-	public Path(final World w, final Vec2f start, final Vec2f end, final boolean canCrossWater,
+	public Path(final World w, final Vec2i start, final Vec2i end, final boolean canCrossWater,
 			final boolean useTerrainCost) {
 
 		this.world = w;
@@ -112,7 +112,7 @@ public final class Path {
 		}
 	}
 
-	public Vec2f getEnd( ) {
+	public Vec2i getEnd( ) {
 
 		return end;
 	}
@@ -130,7 +130,7 @@ public final class Path {
 		return null;
 	}
 
-	public Vec2f getStart( ) {
+	public Vec2i getStart( ) {
 
 		return start;
 	}

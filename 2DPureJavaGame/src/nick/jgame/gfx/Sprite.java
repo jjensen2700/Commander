@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import nick.jgame.util.math.Vec2i;
+
 public final class Sprite implements OffsetRenderable {
 
 	private static final HashMap<String, Sprite>	registered	= new HashMap<>( );
@@ -16,7 +18,7 @@ public final class Sprite implements OffsetRenderable {
 
 	private int[ ]									pixels;
 
-	private int										width, height;
+	private Vec2i									size;
 
 	public Sprite(final File picLoc, final String name) {
 
@@ -25,11 +27,15 @@ public final class Sprite implements OffsetRenderable {
 		registered.put(name, this);
 	}
 
+	private Sprite(final int width, final int height) {
+
+		this.size = new Vec2i(width, height);
+		this.pixels = new int[width * height];
+	}
+
 	public Sprite(final int width, final int height, final int color, final String name) {
 
-		this.width = width;
-		this.height = height;
-		this.pixels = new int[width * height];
+		this(width, height);
 
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = color;
@@ -41,14 +47,12 @@ public final class Sprite implements OffsetRenderable {
 
 	public Sprite(final Sprite parent, final int x, final int y, final int width, final int height, final String name) {
 
-		this.width = width;
-		this.height = height;
-		this.pixels = new int[width * height];
+		this(width, height);
 
 		int pxX = 0, pxY = 0;
 
 		for (int xL = x; xL < (width + x); xL++) {
-			for (int yL = x; yL < (height + y); yL++) {
+			for (int yL = y; yL < (height + y); yL++) {
 				if ((pxX + (pxY * width)) >= pixels.length) {
 					continue;
 				}
@@ -64,18 +68,18 @@ public final class Sprite implements OffsetRenderable {
 
 	public int getHeight( ) {
 
-		return height;
+		return size.getY( );
 	}
 
 	public int getPixel(final int x, final int y) {
 
-		if ((x + (y * width)) >= pixels.length) { return 0; }
-		return pixels[x + (y * width)];
+		if ((x + (y * getWidth( ))) >= pixels.length) { return 0; }
+		return pixels[x + (y * getWidth( ))];
 	}
 
 	public int getWidth( ) {
 
-		return width;
+		return size.getX( );
 	}
 
 	public boolean isLoaded( ) {
@@ -102,9 +106,8 @@ public final class Sprite implements OffsetRenderable {
 		}
 
 		if (img != null) {
-			width = img.getWidth( );
-			height = img.getHeight( );
-			pixels = img.getRGB(0, 0, width, height, pixels, 0, width);
+			size.set(img.getWidth( ), img.getHeight( ));
+			pixels = img.getRGB(0, 0, getWidth( ), getHeight( ), pixels, 0, getWidth( ));
 		}
 		return true;
 	}
