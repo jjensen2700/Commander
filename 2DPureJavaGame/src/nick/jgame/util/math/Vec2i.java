@@ -2,9 +2,16 @@ package nick.jgame.util.math;
 
 public final class Vec2i {
 
-	private int	x;
+	public static final Vec2i	zero	= new Vec2i(0);
 
-	private int	y;
+	private int					x;
+
+	private int					y;
+
+	public Vec2i(final int both) {
+
+		this(both, both);
+	}
 
 	public Vec2i(final int x, final int y)
 	{

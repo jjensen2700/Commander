@@ -13,7 +13,7 @@ public final class Render extends FontRenderContext {
 
 	public static final Font							smallFont	= new Font("Courier New", 0, 12);
 
-	public static final int								transColor	= 0x0f00ff;
+	public static final int								transColor	= 0xf000ff;
 
 	private static final CopyOnWriteArrayList<TxtInfo>	txtList		= new CopyOnWriteArrayList<>( );
 
@@ -89,7 +89,7 @@ public final class Render extends FontRenderContext {
 
 	public boolean isVisible(final short x, final short y) {
 
-		return !((x < 0) || (y < 0) || (y >= height) || (x >= width));
+		return !((y < 0) || (x < 0) || (y >= height) || (x >= width));
 	}
 
 	public void moveOffsets(final short x, final short y) {
@@ -132,12 +132,15 @@ public final class Render extends FontRenderContext {
 			for (short x = xLoc; x < ((s.getWidth( ) + xLoc)); x++) {
 
 				if (!isVisible(x, y)) {
+					xPix++;
 					continue;
 				}
 				int toDraw = s.getPixel(xPix, yPix);
-				if (toDraw != transColor) {
-					setPixel(s.getPixel(xPix, yPix), x, y);
+				if (toDraw == transColor) {
+					xPix++;
+					continue;
 				}
+				setPixel(s.getPixel(xPix, yPix), x, y);
 
 				xPix++;
 			}

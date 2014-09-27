@@ -120,11 +120,15 @@ public final class Town extends WorldStruct {
 	@Override
 	public ArrayList<String> getSaveTxt( ) {
 
+		if (hasNoTypes( )) {
+			this.calcTypes(getHome( ));
+		}
 		ArrayList<String> toRet = super.getSaveTxt( );
 
 		toRet.add("pop:" + population);
 		toRet.add("defense:" + defenseRating);
 		toRet.add("happy:" + happyPercent);
+		toRet.add("type:" + types[0].toString( ) + "," + types[1].toString( ));
 		toRet.add("}");
 		return toRet;
 	}
@@ -152,6 +156,10 @@ public final class Town extends WorldStruct {
 	@Override
 	public void render(final Render rend) {
 
+		short rendX = (short) (rend.getxOff( ) + (getxLoc( ) * 32));
+		short rendY = (short) (rend.getyOff( ) + (getyLoc( ) * 32));
+		rend.renderSprite(Sprites.dirtBack, rendX, rendY);
+		rend.renderSprite(Sprites.normVillage, rendX, rendY);
 	}
 
 	@Override

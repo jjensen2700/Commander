@@ -18,7 +18,7 @@ public final class Sprite implements OffsetRenderable {
 
 	private int[ ]									pixels;
 
-	private Vec2i									size;
+	private Vec2i									size		= Vec2i.zero;
 
 	public Sprite(final File picLoc, final String name) {
 
@@ -73,7 +73,8 @@ public final class Sprite implements OffsetRenderable {
 
 	public int getPixel(final int x, final int y) {
 
-		if ((x + (y * getWidth( ))) >= pixels.length) { return 0; }
+		if (pixels == null) { return Render.transColor; }
+		if ((x + (y * getWidth( ))) >= pixels.length) { return Render.transColor; }
 		return pixels[x + (y * getWidth( ))];
 	}
 
@@ -108,6 +109,9 @@ public final class Sprite implements OffsetRenderable {
 		if (img != null) {
 			size.set(img.getWidth( ), img.getHeight( ));
 			pixels = img.getRGB(0, 0, getWidth( ), getHeight( ), pixels, 0, getWidth( ));
+			for (int i = 0; i < pixels.length; i++) {
+				pixels[i] = pixels[i] & 0x00FFFFFF;
+			}
 		}
 		return true;
 	}

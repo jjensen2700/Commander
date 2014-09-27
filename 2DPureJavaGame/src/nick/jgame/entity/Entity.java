@@ -22,7 +22,7 @@ public class Entity implements Renderable {
 
 	protected boolean		isStatic;
 
-	private Vec2i			loc;
+	private Vec2i			loc	= Vec2i.zero;
 
 	private String			name;
 

@@ -121,6 +121,14 @@ public abstract class Tile implements OffsetRenderable {
 		return img == null;
 	}
 
+	/**
+	 * Use pixel size.
+	 *
+	 * @param rend
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public final boolean isVisible(final Render rend, final short x, final short y) {
 
 		return (rend.isVisible(x, y) || rend.isVisible((short) (x + 32), (short) (y + 32)) || rend.isVisible((short) (x + 32), y) || rend.isVisible(x, (short) (y + 32))) && (img != null);

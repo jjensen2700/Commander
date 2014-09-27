@@ -9,7 +9,7 @@ public final class Tiles {
 
 	public static final Tile	grass	= GrassTile.getInstance( );
 
-	public static final Tile	stone	= StoneTile.getInstance( );
+	public static final Tile	stone	= MountainTile.getInstance( );
 
 	public static final Tile	water	= WaterTile.getInstance( );
 }

@@ -270,14 +270,14 @@ public final class WorldUtil {
 
 		text.add("versionWrittenIn:" + GameVersion.getVersion( ));
 		text.add("seed:" + seed);
-		text.add("sizeInChunks:" + w.getChunkWidth( ) + "," + w.getChunkHeight( ));
+		text.add("sizeInChunks:" + w.getChunkWidth( ) + ", " + w.getChunkHeight( ));
 		text.add(horzBreak);
 		text.add("worldData:{");
 
 		for (short x = 0; x < w.getTileWidth( ); x++) {
 			for (short y = 0; y < w.getTileHeight( ); y++) {
 				Tile t = w.getTile(x, y);
-				text.add(t.getName( ) + ':' + x + ", " + y);
+				text.add(t.getName( ) + ": " + x + ", " + y);
 			}
 		}
 		text.add("}");

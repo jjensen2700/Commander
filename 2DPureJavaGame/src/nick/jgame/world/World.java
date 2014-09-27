@@ -29,13 +29,13 @@ public final class World extends GuiWithThread {
 
 	private File							saveLoc;
 
+	private byte							secCounter	= 0;
+
 	private long							seed;
 
 	private ChunkCoords						size;
 
 	private final ArrayList<WorldStruct>	structs		= new ArrayList<>(20);
-
-	private byte							tenCounter	= 0;
 
 	private float[ ][ ]						tileSet;
 
@@ -285,9 +285,9 @@ public final class World extends GuiWithThread {
 
 				short rendAtX = (short) (xOff + (tileX * 32));
 				short rendAtY = (short) (yOff + (tileY * 32));
-				if (toRend.isVisible(rend, rendAtX, rendAtY)) {
-					toRend.render(rend, rendAtX, rendAtY);
-				}
+
+				toRend.render(rend, rendAtX, rendAtY);
+
 				tileY++;
 			}
 			tileX++;
@@ -386,8 +386,8 @@ public final class World extends GuiWithThread {
 	public void update( ) {
 
 		if (MainGame.getCurrentGui( ) != this) { return; }
-		if (tenCounter > 10) {
-			tenCounter = 0;
+		if (secCounter > 60) {
+			secCounter = 0;
 		}
 		if (!generated) {
 			generate( );
@@ -406,14 +406,14 @@ public final class World extends GuiWithThread {
 			e.update( );
 
 		}
-		if ((tenCounter % 5) == 0) {
+		if (secCounter == 0) {
 
 			getChunk(toUpdate).update(this);
 
 			setNextChunk( );
 		}
 
-		if ((tenCounter % 2) == 0) {
+		if ((secCounter % 2) == 0) {
 			for (WorldStruct t : structs) {
 				if (t == null) {
 					break;
@@ -422,7 +422,7 @@ public final class World extends GuiWithThread {
 			}
 		}
 
-		tenCounter++;
+		secCounter++;
 	}
 
 }
